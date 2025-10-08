@@ -19,7 +19,6 @@ public class HomeJFrame extends javax.swing.JFrame {
      */
     public HomeJFrame() {
         initComponents();
-        showPanel(new QuanLySanPhamJPanel());
         setLocationRelativeTo(null);
     }
     private void showPanel(JPanel panel) {
@@ -200,8 +199,19 @@ public class HomeJFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        new HomeJFrame().setVisible(true);  // Mở giao diện chính
-    this.dispose(); // Đóng form hiện tại
+        int currentState = this.getExtendedState();
+
+    // Tạo frame mới
+    HomeJFrame home = new HomeJFrame();
+
+    // Giữ nguyên trạng thái
+    home.setExtendedState(currentState);
+
+    // Hiển thị
+    home.setVisible(true);
+
+    // Đóng frame hiện tại
+    this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
