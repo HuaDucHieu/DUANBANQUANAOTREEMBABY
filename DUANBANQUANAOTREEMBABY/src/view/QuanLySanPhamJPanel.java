@@ -44,6 +44,8 @@ public class QuanLySanPhamJPanel extends javax.swing.JPanel {
         jTextField4 = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox<>();
 
+        jPanel1.setBackground(new java.awt.Color(255, 153, 204));
+
         jButton1.setText("Thêm");
 
         jButton2.setText("Sửa");

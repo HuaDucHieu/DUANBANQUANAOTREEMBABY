@@ -42,6 +42,8 @@ public class QuanLyDanhMucJPanel extends javax.swing.JPanel {
         jTextField3 = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox<>();
 
+        jPanel1.setBackground(new java.awt.Color(255, 153, 204));
+
         jButton1.setText("Thêm");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

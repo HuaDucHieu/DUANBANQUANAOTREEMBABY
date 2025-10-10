@@ -124,6 +124,8 @@ NhanVienDAO nvDAO = new NhanVienDAO();
         txtEmail = new javax.swing.JTextField();
         txtSDT = new javax.swing.JTextField();
 
+        jPanel1.setBackground(new java.awt.Color(255, 153, 204));
+
         rdoNam1.setText("Nam");
 
         cboChucVu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Quản lý", "Thu ngân", "Nhân viên" }));
