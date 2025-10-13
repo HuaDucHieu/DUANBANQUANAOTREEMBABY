@@ -128,6 +128,7 @@ public class LoginJFrame extends javax.swing.JFrame {
         if (username.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!");
             return;
+        }
     }//GEN-LAST:event_btnDangNhapActionPerformed
 
     /**
