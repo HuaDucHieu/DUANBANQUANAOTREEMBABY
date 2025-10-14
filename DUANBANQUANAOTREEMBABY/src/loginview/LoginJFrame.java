@@ -8,7 +8,7 @@ import javax.swing.*;
 /**
  *
  * @author duchi
- */sqqqqqqqqqqqqqqqqqq
+ */
 public class LoginJFrame extends javax.swing.JFrame {
 
     /**
