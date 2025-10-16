@@ -57,16 +57,22 @@ public class NhanVienDAO {
         }
     }
 
-    public void delete(int maNV) {
-        String sql = "DELETE FROM NhanVien WHERE MaNV = ?";
-        Connection con = ConnectDB.getConnect();
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, maNV);
-            ps.executeUpdate();
+    public int delete(String maNV) {
+        int result = 0;
+        try {
+            Connection con = ConnectDB.getConnect();
+            String sql = "DELETE FROM NhanVien WHERE MaNV = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, maNV);
+            result = ps.executeUpdate();
+            ps.close();
+            con.close();
         } catch (Exception e) {
-            System.out.println("Lỗi xóa nhân viên: " + e.getMessage());
+            e.printStackTrace();
         }
+        return result;
     }
+
 
     public void update(NhanVienEntity nv) {
         String sql = "UPDATE NhanVien SET TenNV = ?, GioiTinh = ?, NgaySinh = ?, ChucVu = ?, SDT = ?, MatKhau = ?, Email = ? WHERE MaNV = ?";
@@ -85,4 +91,5 @@ public class NhanVienDAO {
             e.printStackTrace();
         }
     }
+
 }

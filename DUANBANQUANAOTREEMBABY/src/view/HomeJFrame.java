@@ -25,7 +25,7 @@ public class HomeJFrame extends javax.swing.JFrame {
     mainPanel.removeAll();
     mainPanel.add(panel, BorderLayout.CENTER);
     mainPanel.revalidate();
-    mainPanel.repaint();
+    mainPanel.repaint(); 
 }
 
     /**

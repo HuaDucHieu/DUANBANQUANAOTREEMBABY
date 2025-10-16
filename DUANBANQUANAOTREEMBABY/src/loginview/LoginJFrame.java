@@ -3,8 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package loginview;
+import entity.NhanVienEntity;
 import java.sql.*;
 import javax.swing.*;
+import view.HomeJFrame;
 /**
  *
  * @author duchi
@@ -122,13 +124,23 @@ public class LoginJFrame extends javax.swing.JFrame {
 
     private void btnDangNhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangNhapActionPerformed
         // TODO add your handling code here:
-        String username = txtTenNguoiDung.getText().trim();
-        String password = new String(txtMatKhau.getPassword());
+    String tenDN = txtTenNguoiDung.getText();
 
-        if (username.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!");
-            return;
-        }
+    // Nếu txtMatKhau là JPasswordField thì:
+    char[] pw = ((javax.swing.JPasswordField) txtMatKhau).getPassword();
+    String matKhau = new String(pw);
+
+    // xóa mảng sau khi convert
+    java.util.Arrays.fill(pw, '0');
+
+    if (tenDN.equals("ad min") && matKhau.equals("123")) {
+        // đăng nhập thành công...
+    } else {
+        javax.swing.JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu!");
+    }
+            // 👉 Chuyển sang form Home
+        HomeJFrame home = new HomeJFrame();
+        home.setVisible(true);
     }//GEN-LAST:event_btnDangNhapActionPerformed
 
     /**
