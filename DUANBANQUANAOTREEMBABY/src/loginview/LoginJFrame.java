@@ -8,7 +8,7 @@ import javax.swing.*;
 /**
  *
  * @author duchi
- */sqqqqqqqqqqqqqqqqqq
+ */
 public class LoginJFrame extends javax.swing.JFrame {
 
     /**
@@ -121,13 +121,18 @@ public class LoginJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDangNhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangNhapActionPerformed
-        // TODO add your handling code here:
-        String username = txtTenNguoiDung.getText().trim();
-        String password = new String(txtMatKhau.getPassword());
 
-        if (username.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!");
-            return;
+    // TODO add your handling code here:
+    String username = txtTenNguoiDung.getText().trim();
+    // CHỈ SỬA LỖI: Lấy mảng ký tự và tạo String từ nó (không khuyến khích về bảo mật)
+    String password = new String(txtMatKhau.getPassword()); 
+
+    if (username.isEmpty() || password.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!");
+        return;
+    }
+
+    // Thêm logic xử lý đăng nhập ở đây
     }//GEN-LAST:event_btnDangNhapActionPerformed
 
     /**
