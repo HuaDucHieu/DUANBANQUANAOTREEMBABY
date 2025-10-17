@@ -15,6 +15,7 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
      */
     public QuanLyChiTietHoaDonJPanel() {
         initComponents();
+        
     }
 
     /**
