@@ -9,77 +9,46 @@ package entity;
  * @author Admin
  */
 public class NhanVienEntity {
-    private int maNV;
-    private String tenNV, gioiTinh, ngaySinh, chucVu, sdt, matKhau, email;
-    
+    private int idNhanVien;
+    private String hoTen;
+    private String email;
+    private String matKhau;
+    private String chucVu;
+
     public NhanVienEntity() {
     }
 
-    public NhanVienEntity(int maNV, String tenNV, String gioiTinh, String ngaySinh, String chucVu, String sdt, String matKhau, String email) {
-        this.maNV = maNV;
-        this.tenNV = tenNV;
-        this.gioiTinh = gioiTinh;
-        this.ngaySinh = ngaySinh;
-        this.chucVu = chucVu;
-        this.sdt = sdt;
-        this.matKhau = matKhau;
+    public NhanVienEntity(String hoTen, String email, String matKhau, String chucVu) {
+        this.hoTen = hoTen;
         this.email = email;
+        this.matKhau = matKhau;
+        this.chucVu = chucVu;
     }
-
-    public int getMaNV() {
-        return maNV;
-    }
-
-    public void setMaNV(int maNV) {
-        this.maNV = maNV;
-    }
-
-    public String getTenNV() {
-        return tenNV;
-    }
-
-    public void setTenNV(String tenNV) {
-        this.tenNV = tenNV;
-    }
-
-    public String getGioiTinh() {
-        return gioiTinh;
-    }
-
-    public void setGioiTinh(String gioiTinh) {
-        this.gioiTinh = gioiTinh;
-    }
-
-    public String getNgaySinh() {
-        return ngaySinh;
-    }
-
-    public void setNgaySinh(String ngaySinh) {
-        this.ngaySinh = ngaySinh;
-    }
-
-    public String getChucVu() {
-        return chucVu;
-    }
-
-    public void setChucVu(String chucVu) {
+    
+    
+    
+    public NhanVienEntity(int idNhanVien, String hoTen, String email, String matKhau, String chucVu) {
+        this.idNhanVien = idNhanVien;
+        this.hoTen = hoTen;
+        this.email = email;
+        this.matKhau = matKhau;
         this.chucVu = chucVu;
     }
 
-    public String getSdt() {
-        return sdt;
+    public int getIdNhanVien() {
+        return idNhanVien;
     }
 
-    public void setSdt(String sdt) {
-        this.sdt = sdt;
+    public void setIdNhanVien(int idNhanVien) {
+        this.idNhanVien = idNhanVien;
     }
 
-    public String getMatKhau() {
-        return matKhau;
+    public String getHoTen() {
+        return hoTen;
     }
 
-    public void setMatKhau(String matKhau) {
-        this.matKhau = matKhau;
+    public void setHoTen(String hoTen) {
+        this.hoTen = hoTen;
     }
 
     public String getEmail() {
@@ -90,10 +59,20 @@ public class NhanVienEntity {
         this.email = email;
     }
 
-    
+    public String getMatKhau() {
+        return matKhau;
+    }
 
+    public void setMatKhau(String matKhau) {
+        this.matKhau = matKhau;
+    }
 
-    
-    
+    public String getChucVu() {
+        return chucVu;
+    }
+
+    public void setChucVu(String chucVu) {
+        this.chucVu = chucVu;
+    }
 }
 

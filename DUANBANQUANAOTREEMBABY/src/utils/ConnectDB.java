@@ -15,7 +15,7 @@ import java.sql.SQLException;
 public class ConnectDB {
     public static Connection con = null;
     public static Connection getConnect() {
-        String strDbUrl = "jdbc:sqlserver://localhost:1433; databaseName=DUANBANQUANAOTREEMBABY;user=sa;password=123123;"
+        String strDbUrl = "jdbc:sqlserver://localhost:1433; databaseName=DUANBANQUANAOTREEMBABY;user=sa;password=1234;"
                 + "encrypt=true;trustServerCertificate=true";
         try {
             con = DriverManager.getConnection(strDbUrl);

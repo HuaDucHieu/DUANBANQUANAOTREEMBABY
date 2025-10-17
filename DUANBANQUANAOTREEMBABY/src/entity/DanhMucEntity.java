@@ -9,31 +9,50 @@ package entity;
  * @author Tran Tien
  */
 public class DanhMucEntity {
-    private int maDanhMuc;
+    private int idDanhMuc;
     private String tenDanhMuc;
     private String moTa;
-    private String trangThai;
 
     public DanhMucEntity() {
     }
+    
+    
 
-    public DanhMucEntity(int maDanhMuc, String tenDanhMuc, String moTa, String trangThai) {
-        this.maDanhMuc = maDanhMuc;
+    public DanhMucEntity(int idDanhMuc, String tenDanhMuc, String moTa) {
+        this.idDanhMuc = idDanhMuc;
         this.tenDanhMuc = tenDanhMuc;
         this.moTa = moTa;
-        this.trangThai = trangThai;
     }
 
-    public int getMaDanhMuc() { return maDanhMuc; }
-    public void setMaDanhMuc(int maDanhMuc) { this.maDanhMuc = maDanhMuc; }
+    public DanhMucEntity(String tenDanhMuc, String moTa) {
+        this.tenDanhMuc = tenDanhMuc;
+        this.moTa = moTa;
+    }
 
-    public String getTenDanhMuc() { return tenDanhMuc; }
-    public void setTenDanhMuc(String tenDanhMuc) { this.tenDanhMuc = tenDanhMuc; }
+    public int getIdDanhMuc() {
+        return idDanhMuc;
+    }
 
-    public String getMoTa() { return moTa; }
-    public void setMoTa(String moTa) { this.moTa = moTa; }
+    public void setIdDanhMuc(int idDanhMuc) {
+        this.idDanhMuc = idDanhMuc;
+    }
 
-    public String getTrangThai() { return trangThai; }
-    public void setTrangThai(String trangThai) { this.trangThai = trangThai; }
+    public String getTenDanhMuc() {
+        return tenDanhMuc;
+    }
+
+    public void setTenDanhMuc(String tenDanhMuc) {
+        this.tenDanhMuc = tenDanhMuc;
+    }
+
+    public String getMoTa() {
+        return moTa;
+    }
+
+    public void setMoTa(String moTa) {
+        this.moTa = moTa;
+    }
+    
+    
 }
    
