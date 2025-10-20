@@ -3,28 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/DUANBANQUANAOTREEMBABY/DUANBANQUANAOTREEMBABY/src/dao/KichThuocDAO.java</file>
-            <file>file:/C:/DUANBANQUANAOTREEMBABY/DUANBANQUANAOTREEMBABY/src/entity/NhanVienEntity.java</file>
-            <file>file:/C:/DUANBANQUANAOTREEMBABY/DUANBANQUANAOTREEMBABY/src/dao/NhanVienDAO.java</file>
-            <file>file:/C:/DUANBANQUANAOTREEMBABY/DUANBANQUANAOTREEMBABY/src/view/QuanLyChiTietHoaDonJPanel.java</file>
-            <file>file:/C:/DUANBANQUANAOTREEMBABY/DUANBANQUANAOTREEMBABY/src/utils/ConnectDB.java</file>
-            <file>file:/C:/DUANBANQUANAOTREEMBABY/DUANBANQUANAOTREEMBABY/src/view/QuanLyNhanVienJPanel.java</file>
-            <file>file:/C:/DUANBANQUANAOTREEMBABY/DUANBANQUANAOTREEMBABY/src/entity/KhachHangEntity.java</file>
-            <file>file:/C:/DUANBANQUANAOTREEMBABY/DUANBANQUANAOTREEMBABY/src/entity/MauSacEntity.java</file>
-            <file>file:/C:/DUANBANQUANAOTREEMBABY/DUANBANQUANAOTREEMBABY/src/entity/KichThuocEntity.java</file>
-            <file>file:/C:/DUANBANQUANAOTREEMBABY/DUANBANQUANAOTREEMBABY/src/entity/DanhMucEntity.java</file>
-            <file>file:/C:/DUANBANQUANAOTREEMBABY/DUANBANQUANAOTREEMBABY/src/entity/ChiTietHoaDonEntity.java</file>
-            <file>file:/C:/DUANBANQUANAOTREEMBABY/DUANBANQUANAOTREEMBABY/src/entity/HoaDonEntity.java</file>
-            <file>file:/C:/DUANBANQUANAOTREEMBABY/DUANBANQUANAOTREEMBABY/src/dao/HoaDonDAO.java</file>
-            <file>file:/C:/DUANBANQUANAOTREEMBABY/DUANBANQUANAOTREEMBABY/src/view/HomeJFrame.java</file>
-            <file>file:/C:/DUANBANQUANAOTREEMBABY/DUANBANQUANAOTREEMBABY/src/dao/SanPhamDAO.java</file>
-            <file>file:/C:/DUANBANQUANAOTREEMBABY/DUANBANQUANAOTREEMBABY/src/dao/DanhMucDAO.java</file>
-            <file>file:/C:/DUANBANQUANAOTREEMBABY/DUANBANQUANAOTREEMBABY/src/dao/MauSacDAO.java</file>
             <file>file:/C:/DUANBANQUANAOTREEMBABY/DUANBANQUANAOTREEMBABY/src/dao/ChiTietHoaDonDAO.java</file>
-            <file>file:/C:/DUANBANQUANAOTREEMBABY/DUANBANQUANAOTREEMBABY/src/view/QuanLyHoaDonJPanel.java</file>
-            <file>file:/C:/DUANBANQUANAOTREEMBABY/DUANBANQUANAOTREEMBABY/src/entity/SanPhamEntity.java</file>
-            <file>file:/C:/DUANBANQUANAOTREEMBABY/DUANBANQUANAOTREEMBABY/src/dao/KhachHangDAO.java</file>
-            <file>file:/C:/DUANBANQUANAOTREEMBABY/DUANBANQUANAOTREEMBABY/src/loginview/LoginJFrame.java</file>
         </group>
     </open-files>
 </project-private>
