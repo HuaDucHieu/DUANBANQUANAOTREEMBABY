@@ -6,14 +6,12 @@ package dao;
 
 import entity.SanPhamEntity;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import utils.ConnectDB;
-import static utils.ConnectDB.con;
-import view.QuanLySanPhamJPanel;
+
 
 
 /**
@@ -23,114 +21,76 @@ import view.QuanLySanPhamJPanel;
 public class SanPhamDAO {
     public List<SanPhamEntity> getAll() {
         List<SanPhamEntity> list = new ArrayList<>();
-        try {
-            Connection con = ConnectDB.getConnect(); 
-            String sql = "SELECT * FROM SanPham";
-            PreparedStatement statement = con.prepareStatement(sql);
-            ResultSet result = statement.executeQuery();
+        String sql = "SELECT * FROM SanPham";
+        try (Connection con = ConnectDB.getConnect();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
-            while (result.next()) {
+            while (rs.next()) {
                 SanPhamEntity sp = new SanPhamEntity(
-                    result.getInt("MaSP"), 
-                    result.getString("TenSP"),
-                    result.getInt("LoaiSP"),
-                    result.getInt("Gia"),
-                    result.getInt("TrangThai"));
+                        rs.getInt("id_sp"),
+                        rs.getString("ten_sp"),
+                        rs.getDouble("gia"),
+                        rs.getInt("so_luong"),
+                        rs.getInt("id_danh_muc"),
+                        rs.getString("trang_thai"),
+                        rs.getInt("id_mau_sac"),
+                        rs.getInt("id_kich_thuoc")
+                );
                 list.add(sp);
             }
         } catch (Exception e) {
-            System.out.println("Lỗi getAll sản phẩm: " + e.getMessage());
+            System.out.println("Lỗi getAll SanPham: " + e.getMessage());
         }
         return list;
     }
-    
-    
-    public List<SanPhamEntity> getAllSP() {
-    List<SanPhamEntity> list = new ArrayList<>();
-    try {
-        Connection con = ConnectDB.getConnect(); 
-        String sql = "SELECT sp.MaSP, sp.TenSP, dm.MaDanhMuc, sp.Loai, sp.Gia, sp.TrangThai "
-                   + "FROM SanPham sp "
-                   + "JOIN DanhMuc dm ON sp.MaDanhMuc = dm.MaDanhMuc";
-        PreparedStatement statement = con.prepareStatement(sql);
-        ResultSet result = statement.executeQuery();
 
-        while (result.next()) {
-            SanPhamEntity sp = new SanPhamEntity(
-                   result.getInt("MaSP"), 
-                    result.getString("TenSP"),
-                    result.getInt("LoaiSP"),
-                    result.getInt("Gia"),
-                    result.getInt("TrangThai"));             
-            list.add(sp);
-        }
-    } catch (Exception e) {
-        System.out.println("Lỗi getAll SP: " + e.getMessage());
-    }
-    return list;
-}
+    public void insert(SanPhamEntity sp) {
+        String sql = "INSERT INTO SanPham (ten_sp, gia, so_luong, id_danh_muc, trang_thai, id_mau_sac, id_kich_thuoc) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (Connection con = ConnectDB.getConnect();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
-    public void insert(SanPhamEntity sp){
-        try {
-            Connection con = ConnectDB.getConnect();
-            String sql = "INSERT INTO SanPham (TenSP, SoLuong, Gia, TrangThai)" + "VALUES (?,?,?)";
-            PreparedStatement statement = con.prepareStatement(sql);
-            statement.setString(1, sp.getTenSP());
-            statement.setInt(2, sp.getSoLuong());
-            statement.setInt(3, sp.getGia());
-            statement.setInt(4, sp.getTrangThai());
-            
-            statement.execute();
-        } catch (Exception e) {
-            System.out.println("Loi khi insert: " + e.getMessage());
-        }
-    }
-
-    public void delete(int maSP) {
-        String sql = "DELETE FROM SanPham WHERE MaSP = ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, maSP);
+            ps.setString(1, sp.getTenSp());
+            ps.setDouble(2, sp.getGia());
+            ps.setInt(3, sp.getSoLuong());
+            ps.setInt(4, sp.getIdDanhMuc());
+            ps.setString(5, sp.getTrangThai());
+            ps.setInt(6, sp.getIdMauSac());
+            ps.setInt(7, sp.getIdKichThuoc());
             ps.executeUpdate();
         } catch (Exception e) {
-            System.out.println("Lỗi xóa sản phẩm: " + e.getMessage());
+            System.out.println("Lỗi insert SanPham: " + e.getMessage());
         }
     }
 
     public void update(SanPhamEntity sp) {
-        String sql = "UPDATE SanPham SET TenSP = ?, SoLuong = ?, Gia = ? WHERE MaSP = ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, sp.getTenSP());
-            ps.setInt(2, sp.getSoLuong());
-            ps.setDouble(3, sp.getGia());
-            ps.setInt(4, sp.getMaSP());
+        String sql = "UPDATE SanPham SET ten_sp=?, gia=?, so_luong=?, id_danh_muc=?, trang_thai=?, id_mau_sac=?, id_kich_thuoc=? WHERE id_sp=?";
+        try (Connection con = ConnectDB.getConnect();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, sp.getTenSp());
+            ps.setDouble(2, sp.getGia());
+            ps.setInt(3, sp.getSoLuong());
+            ps.setInt(4, sp.getIdDanhMuc());
+            ps.setString(5, sp.getTrangThai());
+            ps.setInt(6, sp.getIdMauSac());
+            ps.setInt(7, sp.getIdKichThuoc());
+            ps.setInt(8, sp.getIdSp());
             ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Lỗi update SanPham: " + e.getMessage());
         }
     }
-    
-    
-    public SanPhamEntity getOneSP(int id) {
-    try {
-        Connection con = ConnectDB.getConnect(); 
-        String sql = "SELECT sp.MaSP, sp.TenSP, dm.MaDanhMuc, sp.Loai, sp.Gia, sp.TrangThai "
-                   + "FROM SanPham sp "
-                   + "JOIN DanhMuc dm ON sp.MaDanhMuc = dm.MaDanhMuc where sp.MaSanPham = ?";
-        PreparedStatement statement = con.prepareStatement(sql);
-        statement.setInt(1, id);
-        ResultSet result = statement.executeQuery();
-        while (result.next()) {
-            SanPhamEntity sp = new SanPhamEntity(
-                   result.getInt("MaSP"), 
-                    result.getString("TenSP"),
-                    result.getInt("LoaiSP"),
-                    result.getInt("Gia"),
-                    result.getInt("TrangThai"));
-            return sp;
+
+    public void delete(int idSp) {
+        String sql = "DELETE FROM SanPham WHERE id_sp=?";
+        try (Connection con = ConnectDB.getConnect();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, idSp);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            System.out.println("Lỗi delete SanPham: " + e.getMessage());
         }
-    } catch (Exception e) {
-        e.printStackTrace();
     }
-    return null;
-}
 }

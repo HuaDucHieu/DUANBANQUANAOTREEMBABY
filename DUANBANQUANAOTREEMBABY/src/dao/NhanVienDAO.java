@@ -14,75 +14,70 @@ import utils.ConnectDB;
  * @author Admin
  */
 public class NhanVienDAO {
+
     public List<NhanVienEntity> getAll() {
         List<NhanVienEntity> list = new ArrayList<>();
-        try {
-            Connection con = ConnectDB.getConnect(); 
-            String sql = "SELECT * FROM NhanVien";
-            PreparedStatement statement = con.prepareStatement(sql);
-            ResultSet result = statement.executeQuery();
+        String sql = "SELECT * FROM NhanVien";
+        try (Connection con = ConnectDB.getConnect();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
-            while (result.next()) {
+            while (rs.next()) {
                 NhanVienEntity nv = new NhanVienEntity(
-                    result.getInt("MaNV"),
-                    result.getString("TenNV"),
-                    result.getString("GioiTinh"),
-                    result.getString("NgaySinh"),
-                    result.getString("ChucVu"),
-                    result.getString("SDT"),
-                    result.getString("MatKhau"),
-                    result.getString("Email"));
+                        rs.getInt("id_nhan_vien"),
+                        rs.getString("ho_ten"),
+                        rs.getString("email"),
+                        rs.getString("mat_khau"),
+                        rs.getString("chuc_vu")
+                );
                 list.add(nv);
             }
         } catch (Exception e) {
-            System.out.println("Lỗi getAll nhân viên: " + e.getMessage());
+            System.out.println("Lỗi getAll NhanVien: " + e.getMessage());
         }
         return list;
     }
 
     public void insert(NhanVienEntity nv) {
-        Connection con = ConnectDB.getConnect();
-        String sql = "INSERT INTO NhanVien (TenNV, GioiTinh, NgaySinh, ChucVu, SDT, MatKhau, Email) VALUES (?, ?, ?, ?, ?, ?,?)";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, nv.getTenNV());
-            ps.setString(2, nv.getGioiTinh());
-            ps.setString(3, nv.getNgaySinh());
-            ps.setString(4, nv.getChucVu());
-            ps.setString(5, nv.getSdt());
-            ps.setString(6, nv.getMatKhau());
-            ps.setString(7, nv.getEmail());
-            ps.executeUpdate();
-        } catch (Exception e) {
-            System.out.println("Lỗi insert nhân viên: " + e.getMessage());
-        }
-    }
+        String sql = "INSERT INTO NhanVien (ho_ten, email, mat_khau, chuc_vu) VALUES (?, ?, ?, ?)";
+        try (Connection con = ConnectDB.getConnect();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
-    public void delete(int maNV) {
-        String sql = "DELETE FROM NhanVien WHERE MaNV = ?";
-        Connection con = ConnectDB.getConnect();
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, maNV);
+            ps.setString(1, nv.getHoTen());
+            ps.setString(2, nv.getEmail());
+            ps.setString(3, nv.getMatKhau());
+            ps.setString(4, nv.getChucVu());
             ps.executeUpdate();
         } catch (Exception e) {
-            System.out.println("Lỗi xóa nhân viên: " + e.getMessage());
+            System.out.println("Lỗi insert NhanVien: " + e.getMessage());
         }
     }
 
     public void update(NhanVienEntity nv) {
-        String sql = "UPDATE NhanVien SET TenNV = ?, GioiTinh = ?, NgaySinh = ?, ChucVu = ?, SDT = ?, MatKhau = ?, Email = ? WHERE MaNV = ?";
-        Connection con = ConnectDB.getConnect();
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, nv.getTenNV());
-            ps.setString(2, nv.getGioiTinh());
-            ps.setString(3, nv.getNgaySinh());
+        String sql = "UPDATE NhanVien SET ho_ten=?, email=?, mat_khau=?, chuc_vu=? WHERE id_nhan_vien=?";
+        try (Connection con = ConnectDB.getConnect();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, nv.getHoTen());
+            ps.setString(2, nv.getEmail());
+            ps.setString(3, nv.getMatKhau());
             ps.setString(4, nv.getChucVu());
-            ps.setString(5, nv.getSdt());
-            ps.setString(6, nv.getMatKhau());
-            ps.setString(7, nv.getEmail());
-            ps.setInt(8, nv.getMaNV());
+            ps.setInt(5, nv.getIdNhanVien());
             ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Lỗi update NhanVien: " + e.getMessage());
+        }
+    }
+
+    public void delete(int idNhanVien) {
+        String sql = "DELETE FROM NhanVien WHERE id_nhan_vien=?";
+        try (Connection con = ConnectDB.getConnect();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, idNhanVien);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            System.out.println("Lỗi delete NhanVien: " + e.getMessage());
         }
     }
 }

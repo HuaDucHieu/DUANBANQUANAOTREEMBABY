@@ -4,44 +4,64 @@
  */
 package entity;
 
+import java.util.Date;
+
 /**
  *
  * @author Tran Tien
  */
 public class HoaDonEntity {
-    private int maHD;
-    private String ngayTao;
+    private int idHoaDon;
+    private int idKhachHang;
+    private String ngayLap;
     private double tongTien;
+    private String hinhThucTT;
     private String trangThai;
-    private String nhanVien;
-    private String khachHang;
-    
+
     public HoaDonEntity() {
     }
 
-    public HoaDonEntity(int maHD, String ngayTao, double tongTien, String trangThai, String nhanVien, String khachHang) {
-        this.maHD = maHD;
-        this.ngayTao = ngayTao;
+    public HoaDonEntity(int idKhachHang, String ngayLap, double tongTien, String hinhThucTT, String trangThai) {
+        this.idKhachHang = idKhachHang;
+        this.ngayLap = ngayLap;
         this.tongTien = tongTien;
+        this.hinhThucTT = hinhThucTT;
         this.trangThai = trangThai;
-        this.nhanVien = nhanVien;
-        this.khachHang = khachHang;
+    }
+    
+
+    public HoaDonEntity(int idHoaDon, int idKhachHang, String ngayLap, double tongTien,
+                        String hinhThucTT, String trangThai) {
+        this.idHoaDon = idHoaDon;
+        this.idKhachHang = idKhachHang;
+        this.ngayLap = ngayLap;
+        this.tongTien = tongTien;
+        this.hinhThucTT = hinhThucTT;
+        this.trangThai = trangThai;
     }
 
-    public int getMaHD() {
-        return maHD;
+    public int getIdHoaDon() {
+        return idHoaDon;
     }
 
-    public void setMaHD(int maHD) {
-        this.maHD = maHD;
+    public void setIdHoaDon(int idHoaDon) {
+        this.idHoaDon = idHoaDon;
     }
 
-    public String getNgayTao() {
-        return ngayTao;
+    public int getIdKhachHang() {
+        return idKhachHang;
     }
 
-    public void setNgayTao(String ngayTao) {
-        this.ngayTao = ngayTao;
+    public void setIdKhachHang(int idKhachHang) {
+        this.idKhachHang = idKhachHang;
+    }
+
+    public String getNgayLap() {
+        return ngayLap;
+    }
+
+    public void setNgayLap(String ngayLap) {
+        this.ngayLap = ngayLap;
     }
 
     public double getTongTien() {
@@ -52,27 +72,19 @@ public class HoaDonEntity {
         this.tongTien = tongTien;
     }
 
+    public String getHinhThucTT() {
+        return hinhThucTT;
+    }
+
+    public void setHinhThucTT(String hinhThucTT) {
+        this.hinhThucTT = hinhThucTT;
+    }
+
     public String getTrangThai() {
         return trangThai;
     }
 
     public void setTrangThai(String trangThai) {
         this.trangThai = trangThai;
-    }
-
-    public String getNhanVien() {
-        return nhanVien;
-    }
-
-    public void setNhanVien(String nhanVien) {
-        this.nhanVien = nhanVien;
-    }
-
-    public String getKhachHang() {
-        return khachHang;
-    }
-
-    public void setKhachHang(String khachHang) {
-        this.khachHang = khachHang;
     }
 }

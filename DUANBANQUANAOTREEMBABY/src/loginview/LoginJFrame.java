@@ -122,13 +122,13 @@ public class LoginJFrame extends javax.swing.JFrame {
 
     private void btnDangNhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangNhapActionPerformed
         // TODO add your handling code here:
-        String username = txtTenNguoiDung.getText().trim();
-        String password = new String(txtMatKhau.getPassword());
-
-        if (username.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!");
-            return;
-        }
+//        String username = txtTenNguoiDung.getText().trim();
+//        String password = new String(txtMatKhau.getPassword());
+//
+//        if (username.isEmpty() || password.isEmpty()) {
+//            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!");
+//            return;
+//        }
     }//GEN-LAST:event_btnDangNhapActionPerformed
 
     /**
