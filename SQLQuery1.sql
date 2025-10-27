@@ -27,10 +27,12 @@ VALUES
 (N'Trần Thị Bình', 'binh.tran@babi.vn', '123456', N'Nhân viên'),
 (N'Lê Văn Cường', 'cuong.le@babi.vn', '123456', N'Nhân viên'),
 (N'Phạm Thị Hồng', 'hong.pham@babi.vn', '123456', N'Thu ngân'),
-(N'Vũ Minh Khang', 'khang.vu@babi.vn', '123456', N'Kho hàng');
-
-SELECT * FROM NhanVien;
--- DROP TABLE NhanVien;
+(N'Vũ Minh Khang', 'khang.vu@babi.vn', '123456', N'Kho hàng'),
+(N'Nguyễn Thị Thanh', 'thanh.nguyen@babi.vn', '123456', N'Nhân viên'),
+(N'Lê Hoàng Phúc', 'phuc.le@babi.vn', '123456', N'Thu ngân'),
+(N'Phan Thị Yến', 'yen.phan@babi.vn', '123456', N'Kho hàng'),
+(N'Đinh Văn Tùng', 'tung.dinh@babi.vn', '123456', N'Nhân viên'),
+(N'Hoàng Minh Anh', 'minh.anh@babi.vn', '123456', N'Quản lý');
 GO
 
 -- ============================================
@@ -44,14 +46,16 @@ CREATE TABLE KhachHang (
 
 INSERT INTO KhachHang (ho_ten, sdt)
 VALUES
-(N'Phạm Thu Hương', '0905123456'),
-(N'Nguyễn Hoàng Long', '0933456789'),
-(N'Lý Thị Mai', '0987765432'),
-(N'Đặng Hữu Phát', '0978345678'),
-(N'Trần Bảo Ngọc', '0912345678');
-
-SELECT * FROM KhachHang;
--- DROP TABLE KhachHang;
+(N'Nguyễn Minh Tuấn', '0911223344'),
+(N'Hoàng Thị Lan', '0922334455'),
+(N'Phạm Văn Duy', '0933445566'),
+(N'Lê Thị Hồng Nhung', '0944556677'),
+(N'Trần Văn Nam', '0955667788'),
+(N'Đỗ Thị Mai', '0966778899'),
+(N'Ngô Hoàng Sơn', '0977889900'),
+(N'Vũ Thị Hạnh', '0988990011'),
+(N'Bùi Văn Long', '0999001122'),
+(N'Nguyễn Thị Kim', '0900112233');
 GO
 
 -- ============================================
@@ -69,10 +73,12 @@ VALUES
 (N'Quần trẻ em', N'Các loại quần dành cho bé'),
 (N'Phụ kiện', N'Nón, vớ, khăn cho bé'),
 (N'Đồ bộ', N'Bộ đồ cho bé mặc ở nhà'),
-(N'Giày dép', N'Các loại giày dép trẻ em');
-
-SELECT * FROM DanhMuc;
--- DROP TABLE DanhMuc;
+(N'Giày dép', N'Các loại giày dép trẻ em'),
+(N'Áo khoác mùa đông', N'Áo khoác ấm áp cho bé trai và bé gái'),
+(N'Quần short', N'Quần short trẻ em mùa hè'),
+(N'Balo & Túi xách', N'Túi xách, balo cho bé đi học'),
+(N'Nón & Mũ', N'Nón, mũ chống nắng cho trẻ em'),
+(N'Dép & Giày sandal', N'Dép, sandal cho bé đi chơi và đi học');
 GO
 
 -- ============================================
@@ -84,10 +90,9 @@ CREATE TABLE MauSac (
 );
 
 INSERT INTO MauSac (ten_mau_sac)
-VALUES (N'Đỏ'), (N'Xanh dương'), (N'Hồng'), (N'Vàng'), (N'Trắng'), (N'Đen');
-
-SELECT * FROM MauSac;
--- DROP TABLE MauSac;
+VALUES 
+(N'Đỏ'), (N'Xanh dương'), (N'Hồng'), (N'Vàng'), (N'Trắng'), (N'Đen'),
+(N'Tím'), (N'Cam'), (N'Xanh lá'), (N'Hồng nhạt'), (N'Nâu'), (N'Kem');
 GO
 
 -- ============================================
@@ -99,10 +104,9 @@ CREATE TABLE KichThuoc (
 );
 
 INSERT INTO KichThuoc (ten_kich_thuoc)
-VALUES (N'S'), (N'M'), (N'L'), (N'XL'), (N'XXL');
-
-SELECT * FROM KichThuoc;
--- DROP TABLE KichThuoc;
+VALUES 
+(N'S'), (N'M'), (N'L'), (N'XL'), (N'XXL'),
+(N'XXS'), (N'XXL+'), (N'3T'), (N'4T'), (N'5T'), (N'6T');
 GO
 
 -- ============================================
@@ -124,15 +128,16 @@ CREATE TABLE SanPham (
 
 INSERT INTO SanPham (ten_sp, gia, so_luong, id_danh_muc, trang_thai, id_mau_sac, id_kich_thuoc)
 VALUES
-(N'Áo thun bé trai siêu nhân', 120000, 50, 1, N'Còn hàng', 1, 2),
-(N'Áo khoác bé gái mùa đông', 250000, 30, 1, N'Còn hàng', 3, 3),
-(N'Quần jean bé trai', 180000, 40, 2, N'Còn hàng', 2, 3),
-(N'Vớ cotton trẻ em', 30000, 100, 3, N'Còn hàng', 4, 1),
-(N'Đồ bộ mùa hè bé trai', 150000, 60, 4, N'Còn hàng', 5, 2),
-(N'Giày thể thao trẻ em', 220000, 35, 5, N'Còn hàng', 6, 3);
-
-SELECT * FROM SanPham;
--- DROP TABLE SanPham;
+(N'Áo len bé gái', 180000, 40, 1, N'Còn hàng', 3, 2),
+(N'Quần legging bé gái', 150000, 60, 2, N'Còn hàng', 3, 3),
+(N'Nón len trẻ em', 50000, 100, 3, N'Còn hàng', 4, 1),
+(N'Bộ đồ thu bé trai', 220000, 35, 4, N'Còn hàng', 1, 2),
+(N'Giày búp bê bé gái', 250000, 25, 5, N'Còn hàng', 3, 3),
+(N'Áo khoác chống nắng', 200000, 45, 1, N'Còn hàng', 2, 3),
+(N'Quần short bé trai', 120000, 50, 2, N'Còn hàng', 2, 2),
+(N'Khăn len cho bé', 40000, 150, 3, N'Còn hàng', 4, 1),
+(N'Bộ đồ mùa đông bé gái', 300000, 30, 4, N'Còn hàng', 3, 3),
+(N'Giày thể thao bé trai', 280000, 20, 5, N'Còn hàng', 2, 3);
 GO
 
 -- ============================================
@@ -154,10 +159,12 @@ VALUES
 (2, '2025-10-16', 250000, N'Chuyển khoản', N'Đã thanh toán'),
 (3, '2025-10-17', 30000, N'Tiền mặt', N'Đang xử lý'),
 (4, '2025-10-18', 700000, N'Tiền mặt', N'Đã thanh toán'),
-(5, '2025-10-19', 500000, N'Chuyển khoản', N'Đang xử lý');
-
-SELECT * FROM HoaDon;
--- DROP TABLE HoaDon;
+(5, '2025-10-19', 500000, N'Chuyển khoản', N'Đang xử lý'),
+(6, '2025-10-20', 380000, N'Tiền mặt', N'Đang xử lý'),
+(7, '2025-10-21', 250000, N'Chuyển khoản', N'Đang xử lý'),
+(8, '2025-10-22', 450000, N'Tiền mặt', N'Đã thanh toán'),
+(9, '2025-10-23', 300000, N'Chuyển khoản', N'Đang xử lý'),
+(10, '2025-10-24', 500000, N'Tiền mặt', N'Đã thanh toán');
 GO
 
 -- ============================================
@@ -182,10 +189,17 @@ VALUES
 (3, 4, 70, 30000),
 (4, 5, 20, 150000),
 (4, 6, 50, 220000),
-(5, 3, 100, 180000);
-
-SELECT * FROM ChiTietHoaDon;
--- DROP TABLE ChiTietHoaDon;
+(5, 3, 100, 180000),
+(6, 7, 2, 120000),
+(6, 9, 1, 300000),
+(7, 2, 1, 150000),
+(7, 3, 2, 50000),
+(8, 5, 2, 250000),
+(9, 1, 1, 180000),
+(9, 4, 1, 120000),
+(10, 6, 1, 200000),
+(10, 8, 3, 40000),
+(10, 10, 1, 280000);
 GO
 
 -- ============================================
