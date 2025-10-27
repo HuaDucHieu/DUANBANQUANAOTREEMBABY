@@ -28,6 +28,14 @@ public class HoaDonEntity {
         this.hinhThucTT = hinhThucTT;
         this.trangThai = trangThai;
     }
+
+    public HoaDonEntity(int idHoaDon, String ngayLap, String trangThai) {
+        this.idHoaDon = idHoaDon;
+        this.ngayLap = ngayLap;
+        this.trangThai = trangThai;
+    }
+    
+    
     
 
     public HoaDonEntity(int idHoaDon, int idKhachHang, String ngayLap, double tongTien,

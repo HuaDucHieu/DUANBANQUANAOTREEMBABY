@@ -15,12 +15,11 @@ import java.util.List;
  * @author duchi
  */
 public class MauSacDAO {
+
     public List<MauSacEntity> getAll() {
         List<MauSacEntity> list = new ArrayList<>();
         String sql = "SELECT * FROM MauSac";
-        try (Connection con = ConnectDB.getConnect();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 MauSacEntity ms = new MauSacEntity(
@@ -37,8 +36,7 @@ public class MauSacDAO {
 
     public void insert(MauSacEntity ms) {
         String sql = "INSERT INTO MauSac (ten_mau_sac) VALUES (?)";
-        try (Connection con = ConnectDB.getConnect();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, ms.getTenMauSac());
             ps.executeUpdate();
@@ -49,8 +47,7 @@ public class MauSacDAO {
 
     public void update(MauSacEntity ms) {
         String sql = "UPDATE MauSac SET ten_mau_sac=? WHERE id_mau_sac=?";
-        try (Connection con = ConnectDB.getConnect();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, ms.getTenMauSac());
             ps.setInt(2, ms.getIdMauSac());
@@ -62,13 +59,26 @@ public class MauSacDAO {
 
     public void delete(int idMauSac) {
         String sql = "DELETE FROM MauSac WHERE id_mau_sac=?";
-        try (Connection con = ConnectDB.getConnect();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, idMauSac);
             ps.executeUpdate();
         } catch (Exception e) {
             System.out.println("Lỗi delete MauSac: " + e.getMessage());
         }
+    }
+
+    public int findIdByName(String tenMauSac) {
+        String sql = "SELECT id_mau_sac FROM MauSac WHERE ten_mau_sac = ?";
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, tenMauSac);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id_mau_sac");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // không tìm thấy
     }
 }

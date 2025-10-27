@@ -154,7 +154,7 @@ VALUES
 (2, '2025-10-16', 250000, N'Chuyển khoản', N'Đã thanh toán'),
 (3, '2025-10-17', 30000, N'Tiền mặt', N'Đang xử lý'),
 (4, '2025-10-18', 700000, N'Tiền mặt', N'Đã thanh toán'),
-(5, '2025-10-19', 500000, N'Chuyển khoản', N'Đang giao');
+(5, '2025-10-19', 500000, N'Chuyển khoản', N'Đang xử lý');
 
 SELECT * FROM HoaDon;
 -- DROP TABLE HoaDon;
@@ -183,7 +183,6 @@ VALUES
 (4, 5, 20, 150000),
 (4, 6, 50, 220000),
 (5, 3, 100, 180000);
-drop table ChiTietHoaDon
 
 SELECT * FROM ChiTietHoaDon;
 -- DROP TABLE ChiTietHoaDon;

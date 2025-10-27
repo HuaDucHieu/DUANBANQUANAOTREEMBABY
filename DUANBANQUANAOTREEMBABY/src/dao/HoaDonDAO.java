@@ -61,15 +61,14 @@ public class HoaDonDAO {
     }
 
     public void update(HoaDonEntity hd) {
-        String sql = "UPDATE HoaDon SET id_khach_hang=?, ngay_lap=?, tong_tien=?, hinh_thuc_tt=?, trang_thai=? WHERE id_hoa_don=?";
+        String sql = "UPDATE HoaDon SET ngay_lap=?, tong_tien=?, hinh_thuc_tt=?, trang_thai=? WHERE id_hoa_don=?";
         try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setInt(1, hd.getIdKhachHang());
-            ps.setString(2, hd.getNgayLap());
-            ps.setDouble(3, hd.getTongTien());
-            ps.setString(4, hd.getHinhThucTT());
-            ps.setString(5, hd.getTrangThai());
-            ps.setInt(6, hd.getIdHoaDon());
+            ps.setString(1, hd.getNgayLap());
+            ps.setDouble(2, hd.getTongTien());
+            ps.setString(3, hd.getHinhThucTT());
+            ps.setString(4, hd.getTrangThai());
+            ps.setInt(5, hd.getIdHoaDon());
             ps.executeUpdate();
         } catch (Exception e) {
             System.out.println("Lỗi update HoaDon: " + e.getMessage());
@@ -179,4 +178,59 @@ public class HoaDonDAO {
         }
         return list;
     }
+
+    public int insertAndGetId(HoaDonEntity hd) {
+        String sql = "INSERT INTO HoaDon (ngay_lap, trang_thai) VALUES (?, ?)";
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            ps.setString(1, hd.getNgayLap());
+            ps.setString(2, hd.getTrangThai());
+            ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public void updateTrangThai(int idHoaDon, String trangThai) {
+        String sql = "UPDATE HoaDon SET trang_thai = ? WHERE id_hoa_don = ?";
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, trangThai);
+            ps.setInt(2, idHoaDon);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public HoaDonEntity getById(int id) {
+        HoaDonEntity hd = null;
+        String sql = "SELECT * FROM HoaDon WHERE id_hoa_don = ?";
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                hd = new HoaDonEntity(
+                        rs.getInt("id_hoa_don"),
+                        rs.getInt("id_khach_hang"),
+                        rs.getString("ngay_lap"),
+                        rs.getDouble("tong_tien"),
+                        rs.getString("hinh_thuc_tt"),
+                        rs.getString("trang_thai")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return hd;
+    }
+
+   
+
 }

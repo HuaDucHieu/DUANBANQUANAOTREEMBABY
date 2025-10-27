@@ -1,13 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entity;
 
-/**
- *
- * @author Admin
- */
 public class SanPhamEntity {
     private int idSanPham;
     private String tenSp;
@@ -17,6 +9,11 @@ public class SanPhamEntity {
     private String trangThai;
     private int idMauSac;
     private int idKichThuoc;
+
+    // 🔹 Thêm 3 trường mới để hiển thị JOIN
+    private String tenDanhMuc;
+    private String tenMauSac;
+    private String tenKichThuoc;
 
     public SanPhamEntity() {
     }
@@ -32,6 +29,20 @@ public class SanPhamEntity {
         this.idKichThuoc = idKichThuoc;
     }
 
+    public SanPhamEntity(int idSanPham, String tenSp, double gia, int soLuong, int idDanhMuc, int idMauSac, int idKichThuoc, String tenDanhMuc, String tenMauSac, String tenKichThuoc) {
+        this.idSanPham = idSanPham;
+        this.tenSp = tenSp;
+        this.gia = gia;
+        this.soLuong = soLuong;
+        this.idDanhMuc = idDanhMuc;
+        this.idMauSac = idMauSac;
+        this.idKichThuoc = idKichThuoc;
+        this.tenDanhMuc = tenDanhMuc;
+        this.tenMauSac = tenMauSac;
+        this.tenKichThuoc = tenKichThuoc;
+    }
+    
+
     public SanPhamEntity(String tenSp, double gia, int soLuong, int idDanhMuc, String trangThai, int idMauSac, int idKichThuoc) {
         this.tenSp = tenSp;
         this.gia = gia;
@@ -41,7 +52,8 @@ public class SanPhamEntity {
         this.idMauSac = idMauSac;
         this.idKichThuoc = idKichThuoc;
     }
-    
+
+    // --- Getter & Setter ---
     public int getIdSp() {
         return idSanPham;
     }
@@ -104,5 +116,30 @@ public class SanPhamEntity {
 
     public void setIdKichThuoc(int idKichThuoc) {
         this.idKichThuoc = idKichThuoc;
+    }
+
+    // --- Getter & Setter cho 3 trường mới ---
+    public String getTenDanhMuc() {
+        return tenDanhMuc;
+    }
+
+    public void setTenDanhMuc(String tenDanhMuc) {
+        this.tenDanhMuc = tenDanhMuc;
+    }
+
+    public String getTenMauSac() {
+        return tenMauSac;
+    }
+
+    public void setTenMauSac(String tenMauSac) {
+        this.tenMauSac = tenMauSac;
+    }
+
+    public String getTenKichThuoc() {
+        return tenKichThuoc;
+    }
+
+    public void setTenKichThuoc(String tenKichThuoc) {
+        this.tenKichThuoc = tenKichThuoc;
     }
 }
