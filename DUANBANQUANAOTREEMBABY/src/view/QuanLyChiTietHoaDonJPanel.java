@@ -197,6 +197,10 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
         setBackground(new java.awt.Color(51, 51, 51));
         setForeground(new java.awt.Color(51, 51, 51));
 
+        jPanel7.setBackground(new java.awt.Color(255, 153, 153));
+
+        jPanel1.setBackground(new java.awt.Color(255, 102, 102));
+
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel1.setText("Hóa đơn chờ");
 
@@ -254,6 +258,8 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
             }
         });
 
+        jPanel2.setBackground(new java.awt.Color(255, 102, 102));
+
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel2.setText("Danh sách Khách hàng ");
 
@@ -305,6 +311,8 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(scrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE))
         );
+
+        jPanel3.setBackground(new java.awt.Color(255, 102, 102));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel3.setText("Danh sách sản phẩm");
@@ -394,6 +402,8 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE))
         );
 
+        jPanel4.setBackground(new java.awt.Color(255, 102, 102));
+
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel5.setText("Chi tiết hóa đơn");
 
@@ -424,7 +434,7 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jLabel5)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(591, Short.MAX_VALUE))
             .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         jPanel4Layout.setVerticalGroup(
@@ -436,6 +446,8 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        jPanel5.setBackground(new java.awt.Color(255, 102, 102));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel6.setText("Hóa đơn");
@@ -452,6 +464,8 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
                 BtnThemKHActionPerformed(evt);
             }
         });
+
+        jPanel6.setBackground(new java.awt.Color(255, 102, 102));
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel10.setText("Thông tin hóa đơn:");
@@ -528,6 +542,8 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        btnXoaHoaDon.setBackground(new java.awt.Color(0, 204, 204));
+        btnXoaHoaDon.setForeground(new java.awt.Color(0, 153, 153));
         btnXoaHoaDon.setText("Xóa hóa đơn");
         btnXoaHoaDon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -594,7 +610,7 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
                     .addComponent(txtSDT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(21, 21, 21)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
+                .addGap(36, 36, 36)
                 .addComponent(btnXoaHoaDon, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnThanhToan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1037,7 +1053,7 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
         HoaDonEntity hd = hoaDonDAO.getById(idHoaDonDangChon);
 
         // 3️⃣ Kiểm tra khách hàng
-        if (hd.getIdKhachHang() <= 0) {
+        if (txtTenKhachHang.getText().equals("Chưa chọn") || txtTenKhachHang.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn khách hàng trước khi thanh toán!");
             return;
         }
