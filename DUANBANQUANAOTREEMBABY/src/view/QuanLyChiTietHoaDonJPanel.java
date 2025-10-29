@@ -38,6 +38,11 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
 
     // ✅ Khai báo biến toàn cục để lưu hóa đơn đang chọn
     private int idHoaDonDangChon = -1; // -1 nghĩa là chưa chọn hóa đơn nào
+    // Biến toàn cục để lưu sản phẩm đang chọn
+    private int idSanPhamDangChon = -1;  // -1 nghĩa là chưa chọn
+    private String tenSanPhamDangChon = "";
+    private double tienKhachDuaTam = 0;
+    private double tienThoiTam = 0;
 
     /**
      * Creates new form ChiTietHoaDonJPanel
@@ -868,50 +873,106 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
         if (row >= 0) {
             // Lấy id_hoa_don từ bảng
             int idHoaDon = Integer.parseInt(tblHoaDonCho.getValueAt(row, 0).toString());
-
-            // Gán idHoaDon đang chọn vào biến toàn cục
             idHoaDonDangChon = idHoaDon;
 
-            // Gọi hàm để hiển thị chi tiết hóa đơn
-            fillTableChiTietHoaDon();
-
-            // --- BẮT ĐẦU: Hiển thị thông tin khách hàng ---
             try {
                 HoaDonEntity hd = hoaDonDAO.getById(idHoaDonDangChon);
-                if (hd.getIdKhachHang() > 0) {
-                    KhachHangEntity kh = khachHangDAO.getById(hd.getIdKhachHang());
-                    txtTenKhachHang.setText(kh.getHoTen());
-                    txtSDT.setText(kh.getSdt());
+
+                // Nếu hóa đơn chưa thanh toán -> reset toàn bộ TextField
+                if (!"Đã thanh toán".equals(hd.getTrangThai())) {
+                    txtNgayLap.setText("");
+                    txtSoLuong.setText("");
+                    txtTongTien.setText("");
+                    txtTienKhachDua.setText("");
+                    txtTienHoanLai.setText("");
+                    jComboBox1.setSelectedIndex(0);
+
+                    // Hiển thị thông tin khách hàng
+                    if (hd.getIdKhachHang() > 0) {
+                        KhachHangEntity kh = khachHangDAO.getById(hd.getIdKhachHang());
+                        txtTenKhachHang.setText(kh.getHoTen());
+                        txtSDT.setText(kh.getSdt());
+                    } else {
+                        txtTenKhachHang.setText("Chưa chọn");
+                        txtSDT.setText("");
+                    }
+
+                    // Reset biến tạm
+                    tienKhachDuaTam = 0;
+                    tienThoiTam = 0;
+
                 } else {
-                    txtTenKhachHang.setText("Chưa chọn");
-                    txtSDT.setText("");
+                    // Hóa đơn đã thanh toán -> hiển thị dữ liệu
+                    if (hd.getIdKhachHang() > 0) {
+                        KhachHangEntity kh = khachHangDAO.getById(hd.getIdKhachHang());
+                        txtTenKhachHang.setText(kh.getHoTen());
+                        txtSDT.setText(kh.getSdt());
+                    } else {
+                        txtTenKhachHang.setText("Chưa chọn");
+                        txtSDT.setText("");
+                    }
+
+                    // Hiển thị thông tin thanh toán
+                    txtNgayLap.setText(hd.getNgayLap());
+                    txtSoLuong.setText(String.valueOf(chiTietHoaDonDAO.getTongSoLuong(idHoaDonDangChon)));
+                    txtTongTien.setText(String.valueOf(hd.getTongTien()));
+
+                    // Nếu có biến tạm thì điền, nếu chưa thì để trống
+                    txtTienKhachDua.setText(tienKhachDuaTam != 0 ? String.valueOf(tienKhachDuaTam) : "");
+                    txtTienHoanLai.setText(tienThoiTam != 0 ? String.valueOf(tienThoiTam) : "");
+
+                    if (hd.getHinhThucTT() != null) {
+                        jComboBox1.setSelectedItem(hd.getHinhThucTT());
+                    } else {
+                        jComboBox1.setSelectedIndex(0);
+                    }
                 }
+
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-            // --- KẾT THÚC: Hiển thị thông tin khách hàng ---
 
-            // Hiển thị thông báo đã chọn hóa đơn
+            // Hiển thị chi tiết hóa đơn
+            fillTableChiTietHoaDon();
+
+            // Thông báo
             JOptionPane.showMessageDialog(this, "Đã chọn hóa đơn: " + idHoaDonDangChon);
-
-            // (tùy chọn) debug trên console
             System.out.println("Hóa đơn đang chọn: " + idHoaDonDangChon);
+
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn một hóa đơn!");
         }
+
     }//GEN-LAST:event_tblHoaDonChoMouseClicked
 
     private void tblSanPhamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSanPhamMouseClicked
         int row = tblSanPham.getSelectedRow();
         if (row >= 0) {
-            // Lấy tên sản phẩm từ cột 1
+
+            // Kiểm tra đã chọn hóa đơn chưa
+            if (idHoaDonDangChon == -1) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn hóa đơn trước khi chọn sản phẩm!");
+                return;
+            }
+
+            // Kiểm tra đã chọn khách hàng chưa (nếu cần)
+            if (txtTenKhachHang.getText() == null || txtTenKhachHang.getText().trim().isEmpty() || "Chưa chọn".equals(txtTenKhachHang.getText())) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn khách hàng trước khi chọn sản phẩm!");
+                return;
+            }
+
+            // Lấy id và tên sản phẩm
+            int idSanPhamDangChon = Integer.parseInt(tblSanPham.getValueAt(row, 0).toString());
             String tenSanPham = tblSanPham.getValueAt(row, 1).toString();
 
-            // Hiển thị thông báo đã chọn sản phẩm
-            JOptionPane.showMessageDialog(this, "Đã chọn sản phẩm: " + tenSanPham);
+            // Lưu vào biến toàn cục
+            this.idSanPhamDangChon = idSanPhamDangChon;
+            this.tenSanPhamDangChon = tenSanPham;
 
-            // (Tùy chọn) debug trên console
-            System.out.println("Đã chọn sản phẩm: " + tenSanPham);
+            // Hiển thị thông báo
+            JOptionPane.showMessageDialog(this, "Đã chọn sản phẩm: " + tenSanPham);
+            System.out.println("Sản phẩm đang chọn: " + idSanPhamDangChon + " - " + tenSanPham);
+
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn một sản phẩm!");
         }
@@ -966,20 +1027,29 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnCapNhatActionPerformed
 
     private void btnThanhToanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThanhToanActionPerformed
-        //Kiểm tra chọn hóa đơn
+        // 1️⃣ Kiểm tra chọn hóa đơn
         if (idHoaDonDangChon == -1) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn hóa đơn trước!");
             return;
         }
 
-        // 2️⃣ Lấy chi tiết hóa đơn
+        // 2️⃣ Lấy hóa đơn
+        HoaDonEntity hd = hoaDonDAO.getById(idHoaDonDangChon);
+
+        // 3️⃣ Kiểm tra khách hàng
+        if (hd.getIdKhachHang() <= 0) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn khách hàng trước khi thanh toán!");
+            return;
+        }
+
+        // 4️⃣ Lấy chi tiết hóa đơn
         List<ChiTietHoaDonEntity> listCT = chiTietHoaDonDAO.getByIdHoaDon(idHoaDonDangChon);
         if (listCT.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Hóa đơn chưa có sản phẩm!");
             return;
         }
 
-        // 3️⃣ Tính tổng tiền và tổng số lượng
+        // 5️⃣ Tính tổng tiền và tổng số lượng
         double tongTien = 0;
         int tongSoLuong = 0;
         for (ChiTietHoaDonEntity ct : listCT) {
@@ -987,14 +1057,14 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
             tongSoLuong += ct.getSoLuong();
         }
 
-        // 4️⃣ Hiển thị ngày lập, tổng tiền, tổng số lượng
+        // 6️⃣ Hiển thị ngày lập, tổng tiền, tổng số lượng
         java.util.Date ngayHienTai = new java.util.Date();
         txtNgayLap.setText(new java.text.SimpleDateFormat("dd/MM/yyyy").format(ngayHienTai));
         txtSoLuong.setText(String.valueOf(tongSoLuong));
         txtTongTien.setText(String.valueOf(tongTien));
 
         try {
-            // 5️⃣ Nhập tiền khách đưa
+            // 7️⃣ Nhập tiền khách đưa
             String strTienKhachDua = JOptionPane.showInputDialog(this, "Nhập tiền khách đưa:");
             if (strTienKhachDua == null) {
                 return; // hủy
@@ -1006,34 +1076,49 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
             }
 
             double tienThoi = tienKhachDua - tongTien;
-            txtTienKhachDua.setText(String.valueOf(tienKhachDua));
-            txtTienHoanLai.setText(String.valueOf(tienThoi));
 
-            // 6️⃣ Lấy hình thức thanh toán
+            // 8️⃣ Lưu vào biến tạm toàn cục
+            tienKhachDuaTam = tienKhachDua;
+            tienThoiTam = tienThoi;
+
+            // Hiển thị luôn
+            txtTienKhachDua.setText(String.valueOf(tienKhachDuaTam));
+            txtTienHoanLai.setText(String.valueOf(tienThoiTam));
+
+            // 9️⃣ Lấy hình thức thanh toán
             String hinhThucTT = jComboBox1.getSelectedItem().toString();
 
-            // 7️⃣ Cập nhật hóa đơn: trạng thái + tổng tiền + hình thức thanh toán + ngày lập
-            HoaDonEntity hd = hoaDonDAO.getById(idHoaDonDangChon);
+            // 🔟 Cập nhật hóa đơn
             hd.setTongTien(tongTien);
             hd.setHinhThucTT(hinhThucTT);
-            hd.setTrangThai("Đã thanh toán"); // ✅ đây là chỗ đổi trạng thái
+            hd.setTrangThai("Đã thanh toán");
             hd.setNgayLap(new java.text.SimpleDateFormat("yyyy-MM-dd").format(ngayHienTai));
-            hoaDonDAO.update(hd); // gọi hàm update trong DAO
+            hoaDonDAO.update(hd);
 
-            // 8️⃣ Cập nhật tồn kho
+            // 11️⃣ Cập nhật tồn kho
             for (ChiTietHoaDonEntity ct : listCT) {
                 SanPhamEntity sp = sanPhamDAO.findById(ct.getIdSanPham());
                 sp.setSoLuong(sp.getSoLuong() - ct.getSoLuong());
                 sanPhamDAO.update2(sp);
             }
 
-            // 9️⃣ Thông báo thành công
-            JOptionPane.showMessageDialog(this, "✅ Thanh toán thành công! Tiền thối: " + tienThoi);
+            // 12️⃣ Thông báo
+            JOptionPane.showMessageDialog(this, "✅ Thanh toán thành công! Tiền thối: " + tienThoiTam);
 
-            // 🔟 Reload bảng để trạng thái “Đã thanh toán” hiển thị
-            fillTableChiTietHoaDon(); // load chi tiết hóa đơn
-            fillTableSanPham();       // load tồn kho sản phẩm
-            fillTableHoaDonCho();     // load lại hóa đơn chờ (đã thanh toán sẽ biến mất)
+            // 13️⃣ Reset form cho hóa đơn mới
+            txtTenKhachHang.setText("Chưa chọn");
+            txtSDT.setText("");
+            txtNgayLap.setText("");
+            txtSoLuong.setText("");
+            txtTongTien.setText("");
+            txtTienKhachDua.setText("");
+            txtTienHoanLai.setText("");
+            jComboBox1.setSelectedIndex(0);
+
+            // 14️⃣ Reload bảng
+            fillTableChiTietHoaDon();
+            fillTableSanPham();
+            fillTableHoaDonCho();
 
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Tiền khách đưa không hợp lệ!");

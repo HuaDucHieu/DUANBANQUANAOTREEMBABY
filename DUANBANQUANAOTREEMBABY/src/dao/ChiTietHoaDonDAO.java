@@ -247,4 +247,13 @@ public class ChiTietHoaDonDAO {
         }
         return false;
     }
+
+    public int getTongSoLuong(int idHoaDon) {
+        int tong = 0;
+        List<ChiTietHoaDonEntity> list = getByIdHoaDon(idHoaDon);
+        for (ChiTietHoaDonEntity ct : list) {
+            tong += ct.getSoLuong();
+        }
+        return tong;
+    }
 }
