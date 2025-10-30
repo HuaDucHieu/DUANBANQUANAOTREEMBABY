@@ -26,9 +26,9 @@ public class NhanVienDAO {
                 NhanVienEntity nv = new NhanVienEntity(
                         rs.getInt("id_nhan_vien"),
                         rs.getString("ho_ten"),
-                        rs.getString("email"),
+                        rs.getString("chuc_vu"),
                         rs.getString("mat_khau"),
-                        rs.getString("chuc_vu")
+                        rs.getString("email")
                 );
                 list.add(nv);
             }
