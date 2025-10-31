@@ -94,4 +94,22 @@ public class KhachHangDAO {
 
         return kh;
     }
+
+    public KhachHangEntity findBySdt(String sdt) {
+        String sql = "SELECT * FROM KhachHang WHERE sdt = ?";
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, sdt);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                KhachHangEntity kh = new KhachHangEntity();
+                kh.setIdKhachHang(rs.getInt("id_khach_hang"));
+                kh.setHoTen(rs.getString("ho_ten"));
+                kh.setSdt(rs.getString("sdt"));
+                return kh;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

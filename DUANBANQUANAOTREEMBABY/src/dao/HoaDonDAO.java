@@ -231,6 +231,26 @@ public class HoaDonDAO {
         return hd;
     }
 
-   
+    public List<HoaDonEntity> getByDateRange(String from, String to) {
+        List<HoaDonEntity> list = new ArrayList<>();
+        String sql = "SELECT * FROM HoaDon WHERE ngay_Lap BETWEEN ? AND ?";
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, from);
+            ps.setString(2, to);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                HoaDonEntity hd = new HoaDonEntity();
+                hd.setIdHoaDon(rs.getInt("id_hoa_don"));
+                hd.setIdKhachHang(rs.getInt("id_khach_hang"));
+                hd.setNgayLap(rs.getString("ngay_Lap"));
+                hd.setTongTien(rs.getDouble("tong_tien"));
+                hd.setTrangThai(rs.getString("trang_thai"));
+                list.add(hd);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
 }
