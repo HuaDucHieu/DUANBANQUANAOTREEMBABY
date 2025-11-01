@@ -35,6 +35,7 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
         for (NhanVienEntity nv : nvDAO.getAll()) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             Object[] data = {
                 nv.getIdNhanVien(),  // id nhân viên
                 nv.getHoTen(),       // họ tên
@@ -46,6 +47,8 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
             Object row[] = {
                 nv.getIdNhanVien(), 
                 nv.getHoTen(), 
@@ -55,6 +58,9 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
             };
             model.addRow(row);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -238,11 +244,14 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
         });
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         btnTimKiem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnTimKiemActionPerformed(evt);
             }
         });
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -439,6 +448,7 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         String keyword = txtTimKiem.getText().trim(); // Lấy nội dung trong ô tìm kiếm
 
         // Nếu không nhập gì -> thông báo + load lại bảng
@@ -471,6 +481,8 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
         String keyword = txtTimKiem.getText().trim(); // ô nhập từ khóa tìm kiếm
         if (keyword.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập từ khóa tìm kiếm!");
@@ -483,6 +495,9 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
 
         // Đổ dữ liệu ra bảng
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -501,7 +516,10 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
         }
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 
@@ -510,6 +528,9 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên nào!");
         }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -534,10 +555,13 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     private void btnTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimKiemActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnTimKiemActionPerformed
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
