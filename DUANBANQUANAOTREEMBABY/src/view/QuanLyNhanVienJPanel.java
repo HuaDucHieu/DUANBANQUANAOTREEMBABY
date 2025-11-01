@@ -33,6 +33,7 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
         model.setRowCount(0);
 
         for (NhanVienEntity nv : nvDAO.getAll()) {
+<<<<<<< Updated upstream
             Object[] data = {
                 nv.getIdNhanVien(),  // id nhân viên
                 nv.getHoTen(),       // họ tên
@@ -41,6 +42,16 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
                 nv.getChucVu()        // email
             };
             model.addRow(data);
+=======
+            Object row[] = {
+                nv.getIdNhanVien(), 
+                nv.getHoTen(), 
+                nv.getChucVu(), 
+                nv.getMatKhau(),
+                nv.getEmail()
+            };
+            model.addRow(row);
+>>>>>>> Stashed changes
         }
     }
 
@@ -219,11 +230,14 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
                 btnTimKiemMouseClicked(evt);
             }
         });
+<<<<<<< Updated upstream
         btnTimKiem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnTimKiemActionPerformed(evt);
             }
         });
+=======
+>>>>>>> Stashed changes
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -414,6 +428,7 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
 
     private void btnTimKiemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTimKiemMouseClicked
         // TODO add your handling code here:
+<<<<<<< Updated upstream
         String keyword = txtTimKiem.getText().trim(); // Lấy nội dung trong ô tìm kiếm
 
         // Nếu không nhập gì -> thông báo + load lại bảng
@@ -443,6 +458,19 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
         }
 
         // Nếu tìm thấy -> hiển thị kết quả tìm được
+=======
+        String keyword = txtTimKiem.getText().trim(); // ô nhập từ khóa tìm kiếm
+        if (keyword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập từ khóa tìm kiếm!");
+            return;
+        }
+
+        // Gọi DAO để tìm kiếm
+        NhanVienDAO dao = new NhanVienDAO();
+        List<NhanVienEntity> list = dao.search(keyword);
+
+        // Đổ dữ liệu ra bảng
+>>>>>>> Stashed changes
         DefaultTableModel model = (DefaultTableModel) tblNhanVien.getModel();
         model.setRowCount(0); // Xóa dữ liệu cũ trong bảng
 
@@ -456,6 +484,14 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
             };
             model.addRow(row);
         }
+<<<<<<< Updated upstream
+=======
+
+        // Thông báo nếu không có kết quả
+        if (list.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên nào!");
+        }
+>>>>>>> Stashed changes
     }//GEN-LAST:event_btnTimKiemMouseClicked
 
     private void btnCapNhatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCapNhatMouseClicked
@@ -475,10 +511,13 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
         fillTable();
     }//GEN-LAST:event_btnCapNhatMouseClicked
 
+<<<<<<< Updated upstream
     private void btnTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimKiemActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnTimKiemActionPerformed
 
+=======
+>>>>>>> Stashed changes
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCapNhat;
