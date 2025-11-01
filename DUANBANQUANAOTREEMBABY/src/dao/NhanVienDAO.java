@@ -25,6 +25,7 @@ public class NhanVienDAO {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
                 NhanVienEntity nv = new NhanVienEntity(
                         rs.getInt("id_nhan_vien"),
@@ -39,6 +40,8 @@ public class NhanVienDAO {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
                 NhanVienEntity nv = new NhanVienEntity();
                 nv.setIdNhanVien(rs.getInt("id_nhan_vien"));
                 nv.setHoTen(rs.getString("ho_ten"));
@@ -49,6 +52,9 @@ public class NhanVienDAO {
                 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -62,6 +68,7 @@ public class NhanVienDAO {
         return list;
     }
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -259,6 +266,41 @@ public class NhanVienDAO {
     }
 
 >>>>>>> Stashed changes
+=======
+    public int insert(NhanVienEntity nv) {
+        String sql = "INSERT INTO NhanVien(ho_ten, chuc_vu, mat_khau, email) VALUES (?, ?, ?, ?)";
+        try {
+            PreparedStatement ps = ConnectDB.getConnect().prepareStatement(sql);
+            ps.setString(1, nv.getHoTen());
+            ps.setString(2, nv.getChucVu());
+            ps.setString(3, nv.getMatKhau());
+            ps.setString(4, nv.getEmail());
+            
+            
+
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            System.out.println("Lỗi insert: " + e.getMessage());
+        }
+        return -1;
+    }
+
+    public int update(NhanVienEntity nv) {
+        try {
+            String sql = "UPDATE NhanVien SET ho_ten=?, chuc_vu=?, mat_khau=? WHERE email=?";
+            PreparedStatement ps = ConnectDB.getConnect().prepareStatement(sql);
+            ps.setString(1, nv.getHoTen());
+            ps.setString(2, nv.getChucVu());
+            ps.setString(3, nv.getMatKhau());          
+            ps.setString(4, nv.getEmail());
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            System.out.println("Lỗi update: " + e.getMessage());
+        }
+        return -1;
+    }
+
+>>>>>>> Stashed changes
     public int delete(int id) {
         int kq = 0;
         try {
@@ -299,6 +341,9 @@ public class NhanVienDAO {
         }
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
