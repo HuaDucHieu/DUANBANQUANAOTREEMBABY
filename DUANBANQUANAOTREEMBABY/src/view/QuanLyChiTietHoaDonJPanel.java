@@ -4,13 +4,8 @@
  */
 package view;
 
-import dao.ChiTietHoaDonDAO;
-import dao.DanhMucDAO;
-import dao.HoaDonDAO;
-import dao.KhachHangDAO;
-import dao.KichThuocDAO;
-import dao.MauSacDAO;
-import dao.SanPhamDAO;
+
+import dao.*;
 import entity.ChiTietHoaDonEntity;
 import entity.HoaDonEntity;
 import entity.KhachHangEntity;

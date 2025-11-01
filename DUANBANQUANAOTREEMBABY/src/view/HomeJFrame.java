@@ -4,9 +4,16 @@
  */
 package view;
 
+
 import java.awt.BorderLayout;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import view.QuanLyChiTietHoaDonJPanel;
+import view.QuanLyDanhMucJPanel;
+import view.QuanLyHoaDonJPanel;
+import view.QuanLyKhachHangJPanel;
+import view.QuanLyNhanVienJPanel;
+import view.QuanLySanPhamJPanel;
 
 /**
  *
