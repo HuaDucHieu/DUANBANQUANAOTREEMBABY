@@ -4,6 +4,7 @@
  */
 package dao;
 
+import entity.KhachHangEntity;
 import entity.SanPhamEntity;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -125,6 +126,29 @@ public class SanPhamDAO {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<KhachHangEntity> search(String keyword) {
+        List<KhachHangEntity> list = new ArrayList<>();
+        String sql = "SELECT * FROM KhachHang WHERE CAST(id_khach_hang AS NVARCHAR) LIKE ? OR ho_ten LIKE ?";
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, "%" + keyword + "%");
+            ps.setString(2, "%" + keyword + "%");
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                KhachHangEntity kh = new KhachHangEntity();
+                kh.setIdKhachHang(rs.getInt("id_khach_hang"));
+                kh.setHoTen(rs.getString("ho_ten"));
+                kh.setSdt(rs.getString("sdt"));
+                list.add(kh);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Lỗi tìm kiếm khách hàng: " + e.getMessage());
         }
         return list;
     }

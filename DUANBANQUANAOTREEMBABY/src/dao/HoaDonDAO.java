@@ -19,29 +19,28 @@ public class HoaDonDAO {
 
     public List<HoaDonEntity> getAll() {
         List<HoaDonEntity> list = new ArrayList<>();
+        String sql = "SELECT hd.*, kh.ho_ten AS ten_khach_hang "
+                + "FROM HoaDon hd "
+                + "JOIN KhachHang kh ON hd.id_khach_hang = kh.id_khach_hang";
 
-        try {
-            Connection con = ConnectDB.getConnect();
-            String sql = "SELECT * FROM HoaDon";
-            PreparedStatement statement = con.prepareStatement(sql);
-            ResultSet result = statement.executeQuery();
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
-            while (result.next()) {
-                HoaDonEntity hoaDon = new HoaDonEntity(
-                        result.getInt("id_hoa_don"),
-                        result.getInt("id_khach_hang"),
-                        result.getString("ngay_lap"),
-                        result.getDouble("tong_tien"),
-                        result.getString("hinh_thuc_tt"),
-                        result.getString("trang_thai")
+            while (rs.next()) {
+                HoaDonEntity hd = new HoaDonEntity(
+                        rs.getInt("id_hoa_don"),
+                        rs.getInt("id_khach_hang"),
+                        rs.getString("ngay_lap"),
+                        rs.getDouble("tong_tien"),
+                        rs.getString("hinh_thuc_tt"),
+                        rs.getString("trang_thai"),
+                        rs.getString("ten_khach_hang")
                 );
-                list.add(hoaDon);
+                list.add(hd);
             }
 
         } catch (Exception e) {
-            System.out.println("Lỗi get all hóa đơn: " + e.getMessage());
+            System.out.println("Lỗi getAll HoaDon: " + e.getMessage());
         }
-
         return list;
     }
 
@@ -127,10 +126,15 @@ public class HoaDonDAO {
 
     public List<HoaDonEntity> searchByDate(String ngayLap) {
         List<HoaDonEntity> list = new ArrayList<>();
-        String sql = "SELECT * FROM HoaDon WHERE ngay_lap = ?";
+        String sql = "SELECT hd.*, kh.ho_ten AS ten_khach_hang "
+                + "FROM HoaDon hd "
+                + "JOIN KhachHang kh ON hd.id_khach_hang = kh.id_khach_hang "
+                + "WHERE hd.ngay_lap = ?";
+
         try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, ngayLap);
+
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     HoaDonEntity hd = new HoaDonEntity(
@@ -139,11 +143,13 @@ public class HoaDonDAO {
                             rs.getString("ngay_lap"),
                             rs.getDouble("tong_tien"),
                             rs.getString("hinh_thuc_tt"),
-                            rs.getString("trang_thai")
+                            rs.getString("trang_thai"),
+                            rs.getString("ten_khach_hang")
                     );
                     list.add(hd);
                 }
             }
+
         } catch (Exception e) {
             System.out.println("Lỗi searchByDate HoaDon: " + e.getMessage());
         }
@@ -152,13 +158,21 @@ public class HoaDonDAO {
 
     public List<HoaDonEntity> search(String keyword) {
         List<HoaDonEntity> list = new ArrayList<>();
-        String sql = "SELECT * FROM HoaDon WHERE CAST(id_hoa_don AS NVARCHAR) LIKE ? "
-                + "OR trang_thai LIKE ? OR hinh_thuc_tt LIKE ?";
+        String sql = "SELECT hd.*, kh.ho_ten AS ten_khach_hang "
+                + "FROM HoaDon hd "
+                + "JOIN KhachHang kh ON hd.id_khach_hang = kh.id_khach_hang "
+                + "WHERE CAST(hd.id_hoa_don AS NVARCHAR) LIKE ? "
+                + "OR hd.trang_thai LIKE ? "
+                + "OR hd.hinh_thuc_tt LIKE ? "
+                + "OR kh.ho_ten LIKE ?";
 
         try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, "%" + keyword + "%");
-            ps.setString(2, "%" + keyword + "%");
-            ps.setString(3, "%" + keyword + "%");
+
+            String kw = "%" + keyword + "%";
+            ps.setString(1, kw);
+            ps.setString(2, kw);
+            ps.setString(3, kw);
+            ps.setString(4, kw);
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -168,11 +182,13 @@ public class HoaDonDAO {
                             rs.getString("ngay_lap"),
                             rs.getDouble("tong_tien"),
                             rs.getString("hinh_thuc_tt"),
-                            rs.getString("trang_thai")
+                            rs.getString("trang_thai"),
+                            rs.getString("ten_khach_hang")
                     );
                     list.add(hd);
                 }
             }
+
         } catch (Exception e) {
             System.out.println("Lỗi search HoaDon: " + e.getMessage());
         }
@@ -211,26 +227,54 @@ public class HoaDonDAO {
 
     public HoaDonEntity getById(int id) {
         HoaDonEntity hd = null;
-        String sql = "SELECT * FROM HoaDon WHERE id_hoa_don = ?";
+        String sql = "SELECT hd.*, kh.ho_ten AS ten_khach_hang "
+                + "FROM HoaDon hd "
+                + "JOIN KhachHang kh ON hd.id_khach_hang = kh.id_khach_hang "
+                + "WHERE hd.id_hoa_don=?";
+
         try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
+
             ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                hd = new HoaDonEntity(
-                        rs.getInt("id_hoa_don"),
-                        rs.getInt("id_khach_hang"),
-                        rs.getString("ngay_lap"),
-                        rs.getDouble("tong_tien"),
-                        rs.getString("hinh_thuc_tt"),
-                        rs.getString("trang_thai")
-                );
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    hd = new HoaDonEntity(
+                            rs.getInt("id_hoa_don"),
+                            rs.getInt("id_khach_hang"),
+                            rs.getString("ngay_lap"),
+                            rs.getDouble("tong_tien"),
+                            rs.getString("hinh_thuc_tt"),
+                            rs.getString("trang_thai"),
+                            rs.getString("ten_khach_hang") // đây là String
+                    );
+                }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
         return hd;
     }
 
-   
+    public List<HoaDonEntity> getByDateRange(String from, String to) {
+        List<HoaDonEntity> list = new ArrayList<>();
+        String sql = "SELECT * FROM HoaDon WHERE ngay_Lap BETWEEN ? AND ?";
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, from);
+            ps.setString(2, to);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                HoaDonEntity hd = new HoaDonEntity();
+                hd.setIdHoaDon(rs.getInt("id_hoa_don"));
+                hd.setIdKhachHang(rs.getInt("id_khach_hang"));
+                hd.setNgayLap(rs.getString("ngay_Lap"));
+                hd.setTongTien(rs.getDouble("tong_tien"));
+                hd.setTrangThai(rs.getString("trang_thai"));
+                list.add(hd);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
 }
