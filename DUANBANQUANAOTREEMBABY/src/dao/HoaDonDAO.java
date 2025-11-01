@@ -21,7 +21,7 @@ public class HoaDonDAO {
         List<HoaDonEntity> list = new ArrayList<>();
         String sql = "SELECT hd.*, kh.ho_ten AS ten_khach_hang "
                 + "FROM HoaDon hd "
-                + "JOIN KhachHang kh ON hd.id_khach_hang = kh.id_khach_hang";
+                + "LEFT JOIN KhachHang kh ON hd.id_khach_hang = kh.id_khach_hang";
 
         try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
@@ -40,6 +40,27 @@ public class HoaDonDAO {
 
         } catch (Exception e) {
             System.out.println("Lỗi getAll HoaDon: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<HoaDonEntity> getHoaDonCho() {
+        List<HoaDonEntity> list = new ArrayList<>();
+        String sql = "SELECT id_hoa_don, ngay_lap, trang_thai "
+                + "FROM HoaDon ";
+
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                HoaDonEntity hd = new HoaDonEntity();
+                hd.setIdHoaDon(rs.getInt("id_hoa_don"));
+                hd.setNgayLap(rs.getString("ngay_lap"));
+                hd.setTrangThai(rs.getString("trang_thai"));
+                list.add(hd);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Lỗi getHoaDonCho: " + e.getMessage());
         }
         return list;
     }
@@ -160,7 +181,7 @@ public class HoaDonDAO {
         List<HoaDonEntity> list = new ArrayList<>();
         String sql = "SELECT hd.*, kh.ho_ten AS ten_khach_hang "
                 + "FROM HoaDon hd "
-                + "JOIN KhachHang kh ON hd.id_khach_hang = kh.id_khach_hang "
+                + "LEFT JOIN KhachHang kh ON hd.id_khach_hang = kh.id_khach_hang"
                 + "WHERE CAST(hd.id_hoa_don AS NVARCHAR) LIKE ? "
                 + "OR hd.trang_thai LIKE ? "
                 + "OR hd.hinh_thuc_tt LIKE ? "
@@ -229,11 +250,9 @@ public class HoaDonDAO {
         HoaDonEntity hd = null;
         String sql = "SELECT hd.*, kh.ho_ten AS ten_khach_hang "
                 + "FROM HoaDon hd "
-                + "JOIN KhachHang kh ON hd.id_khach_hang = kh.id_khach_hang "
+                + "LEFT JOIN KhachHang kh ON hd.id_khach_hang = kh.id_khach_hang "
                 + "WHERE hd.id_hoa_don=?";
-
         try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
-
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -244,11 +263,10 @@ public class HoaDonDAO {
                             rs.getDouble("tong_tien"),
                             rs.getString("hinh_thuc_tt"),
                             rs.getString("trang_thai"),
-                            rs.getString("ten_khach_hang") // đây là String
+                            rs.getString("ten_khach_hang") // có thể null
                     );
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -275,6 +293,20 @@ public class HoaDonDAO {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public boolean delete2(int idHoaDon) {
+        String sql = "DELETE FROM HoaDon WHERE id_hoa_don = ?";
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, idHoaDon);
+            int result = ps.executeUpdate();
+            return result > 0; // true nếu xóa thành công
+
+        } catch (Exception e) {
+            System.out.println("Lỗi delete HoaDon: " + e.getMessage());
+            return false;
+        }
     }
 
 }

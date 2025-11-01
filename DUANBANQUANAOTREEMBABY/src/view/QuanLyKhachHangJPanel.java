@@ -354,6 +354,7 @@ public class QuanLyKhachHangJPanel extends javax.swing.JPanel {
         } else {
             JOptionPane.showMessageDialog(this, "Không tìm thấy khách hàng với ID: " + id);
         }
+        fillTable();
     }//GEN-LAST:event_btnTimKiemActionPerformed
 
 

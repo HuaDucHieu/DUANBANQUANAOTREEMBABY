@@ -24,6 +24,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -74,7 +75,7 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
     private void fillTableHoaDonCho() {
         DefaultTableModel model = (DefaultTableModel) tblHoaDonCho.getModel();
         model.setRowCount(0);
-        List<HoaDonEntity> list = hoaDonDAO.getAll();
+        List<HoaDonEntity> list = hoaDonDAO.getHoaDonCho();
         for (HoaDonEntity hd : list) {
             model.addRow(new Object[]{
                 hd.getIdHoaDon(),
@@ -754,16 +755,18 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnTaoHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTaoHoaDonActionPerformed
-        // TODO add your handling code here:
         HoaDonEntity hd = new HoaDonEntity();
         java.time.LocalDateTime now = java.time.LocalDateTime.now();
-        hd.setNgayLap(now.toString());
+        hd.setNgayLap(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         hd.setTrangThai("Đang xử lý");
 
         int id = hoaDonDAO.insertAndGetId(hd);
         if (id != -1) {
             JOptionPane.showMessageDialog(this, "Tạo hóa đơn thành công! Mã: " + id);
-            fillTableHoaDonCho();
+            fillTableHoaDonCho(); // ✅ load lại bảng
+
+            // ❌ KHÔNG gán idHoaDonDangChon ngay
+            // Chỉ gán khi người dùng click vào row
         } else {
             JOptionPane.showMessageDialog(this, "Tạo hóa đơn thất bại!");
         }
@@ -996,49 +999,65 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
 
     private void tblHoaDonChoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblHoaDonChoMouseClicked
         int row = tblHoaDonCho.getSelectedRow();
-        if (row >= 0) {
-            int idHoaDon = Integer.parseInt(tblHoaDonCho.getValueAt(row, 0).toString());
-            idHoaDonDangChon = idHoaDon;
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một hóa đơn!");
+            return;
+        }
 
-            try {
-                HoaDonEntity hd = hoaDonDAO.getById(idHoaDonDangChon);
+// Lấy id hóa đơn từ JTable
+        int idHoaDon = Integer.parseInt(tblHoaDonCho.getValueAt(row, 0).toString());
+        idHoaDonDangChon = idHoaDon;
 
-                // ✅ Nếu có thông tin tạm trong Java -> hiển thị lại
-                if (hoaDonTam.containsKey(idHoaDonDangChon)) {
-                    ThongTinTamHoaDon thongTin = hoaDonTam.get(idHoaDonDangChon);
-                    txtTenKhachHang.setText(thongTin.getTenKhachHang());
-                    txtSoDienThoai.setText(thongTin.getSdt());
-                    txtSoLuong.setText(String.valueOf(thongTin.getTongSoLuong()));
-                    txtTongTien.setText(String.valueOf(thongTin.getTongTien()));
-                } else {
-                    // Nếu chưa lưu tạm -> lấy từ DB (nếu có)
-                    if (hd.getIdKhachHang() > 0) {
-                        KhachHangEntity kh = khachHangDAO.getById(hd.getIdKhachHang());
+        try {
+            // Lấy hóa đơn từ DB
+            HoaDonEntity hd = hoaDonDAO.getById(idHoaDonDangChon);
+
+            if (hd == null) {
+                // Chỉ thông báo lỗi, không xóa row
+                JOptionPane.showMessageDialog(this, "Hóa đơn này không tồn tại trong DB!");
+                return;
+            }
+
+            // Nếu có thông tin tạm trong Java -> hiển thị
+            if (hoaDonTam.containsKey(idHoaDonDangChon)) {
+                ThongTinTamHoaDon thongTin = hoaDonTam.get(idHoaDonDangChon);
+                txtTenKhachHang.setText(thongTin.getTenKhachHang());
+                txtSoDienThoai.setText(thongTin.getSdt());
+                txtSoLuong.setText(String.valueOf(thongTin.getTongSoLuong()));
+                txtTongTien.setText(String.valueOf(thongTin.getTongTien()));
+            } else {
+                // Lấy thông tin khách hàng từ DB nếu có
+                if (hd.getIdKhachHang() > 0) {
+                    KhachHangEntity kh = khachHangDAO.getById(hd.getIdKhachHang());
+                    if (kh != null) {
                         txtTenKhachHang.setText(kh.getHoTen());
                         txtSoDienThoai.setText(kh.getSdt());
                     } else {
                         txtTenKhachHang.setText("Chưa chọn");
                         txtSoDienThoai.setText("");
                     }
-
-                    txtSoLuong.setText("");
-                    txtTongTien.setText("");
+                } else {
+                    txtTenKhachHang.setText("Chưa chọn");
+                    txtSoDienThoai.setText("");
                 }
 
-                // Reset thanh toán
-                txtTienKhachDua.setText("");
-                txtTienHoanLai.setText("");
-                jComboBox1.setSelectedIndex(0);
-
-                fillTableChiTietHoaDon();
-                JOptionPane.showMessageDialog(this, "Đã chọn hóa đơn: " + idHoaDonDangChon);
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
+                txtSoLuong.setText("");
+                txtTongTien.setText("");
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn một hóa đơn!");
+
+            // Reset thanh toán
+            txtTienKhachDua.setText("");
+            txtTienHoanLai.setText("");
+            jComboBox1.setSelectedIndex(0);
+
+            fillTableChiTietHoaDon();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Lỗi khi lấy thông tin hóa đơn!");
         }
+
+
     }//GEN-LAST:event_tblHoaDonChoMouseClicked
 
     private void tblSanPhamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSanPhamMouseClicked
