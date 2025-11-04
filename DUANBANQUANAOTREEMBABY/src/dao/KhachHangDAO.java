@@ -174,4 +174,26 @@ public class KhachHangDAO {
         return list;
     }
 
+    // Tìm khách hàng theo tên (trả về KhachHangEntity hoặc null nếu không tìm thấy)
+    public KhachHangEntity findByName(String hoTen) {
+        String sql = "SELECT * FROM KhachHang WHERE ho_ten = ?";
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, hoTen);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    KhachHangEntity kh = new KhachHangEntity();
+                    kh.setIdKhachHang(rs.getInt("id_khach_hang"));
+                    kh.setHoTen(rs.getString("ho_ten"));
+                    kh.setSdt(rs.getString("sdt"));
+                    return kh;
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null; // không tìm thấy
+    }
+
 }

@@ -4,8 +4,6 @@
  */
 package view;
 
-
-
 /**
  *
  * @author Tran Tien

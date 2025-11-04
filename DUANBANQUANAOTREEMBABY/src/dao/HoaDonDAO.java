@@ -17,29 +17,30 @@ import utils.ConnectDB;
  */
 public class HoaDonDAO {
 
+    // ✅ DAO: lấy toàn bộ hóa đơn kèm tên khách hàng
     public List<HoaDonEntity> getAll() {
         List<HoaDonEntity> list = new ArrayList<>();
-        String sql = "SELECT hd.*, kh.ho_ten AS ten_khach_hang "
-                + "FROM HoaDon hd "
-                + "LEFT JOIN KhachHang kh ON hd.id_khach_hang = kh.id_khach_hang";
+        String sql = """
+        SELECT hd.id_hoa_don, hd.ngay_lap, hd.tong_tien, hd.trang_thai, kh.ho_ten AS ten_khach_hang
+        FROM HoaDon hd
+        LEFT JOIN KhachHang kh ON hd.id_khach_hang = kh.id_khach_hang
+        ORDER BY hd.id_hoa_don ASC
+    """;
 
         try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                HoaDonEntity hd = new HoaDonEntity(
-                        rs.getInt("id_hoa_don"),
-                        rs.getInt("id_khach_hang"),
-                        rs.getString("ngay_lap"),
-                        rs.getDouble("tong_tien"),
-                        rs.getString("hinh_thuc_tt"),
-                        rs.getString("trang_thai"),
-                        rs.getString("ten_khach_hang")
-                );
+                HoaDonEntity hd = new HoaDonEntity();
+                hd.setIdHoaDon(rs.getInt("id_hoa_don"));
+                hd.setTenKhachHang(rs.getString("ten_khach_hang"));
+                hd.setNgayLap(rs.getString("ngay_lap"));
+                hd.setTongTien(rs.getDouble("tong_tien"));
+                hd.setTrangThai(rs.getString("trang_thai"));
                 list.add(hd);
             }
 
         } catch (Exception e) {
-            System.out.println("Lỗi getAll HoaDon: " + e.getMessage());
+            System.out.println("Lỗi getHoaDon: " + e.getMessage());
         }
         return list;
     }
@@ -65,7 +66,7 @@ public class HoaDonDAO {
         return list;
     }
 
-    public void insert(HoaDonEntity hd) {
+    public void insert2(HoaDonEntity hd) {
         String sql = "INSERT INTO HoaDon (id_khach_hang, ngay_lap, tong_tien, hinh_thuc_tt, trang_thai) VALUES (?, ?, ?, ?, ?)";
         try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -249,26 +250,22 @@ public class HoaDonDAO {
     public HoaDonEntity getById(int id) {
         HoaDonEntity hd = null;
         String sql = "SELECT hd.*, kh.ho_ten AS ten_khach_hang "
-                + "FROM HoaDon hd "
-                + "LEFT JOIN KhachHang kh ON hd.id_khach_hang = kh.id_khach_hang "
-                + "WHERE hd.id_hoa_don=?";
+                + "FROM HoaDon hd LEFT JOIN KhachHang kh ON hd.id_khach_hang = kh.id_khach_hang "
+                + "WHERE hd.id_hoa_don = ?";
         try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    hd = new HoaDonEntity(
-                            rs.getInt("id_hoa_don"),
-                            rs.getInt("id_khach_hang"),
-                            rs.getString("ngay_lap"),
-                            rs.getDouble("tong_tien"),
-                            rs.getString("hinh_thuc_tt"),
-                            rs.getString("trang_thai"),
-                            rs.getString("ten_khach_hang") // có thể null
-                    );
-                }
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                hd = new HoaDonEntity();
+                hd.setIdHoaDon(rs.getInt("id_hoa_don"));
+                hd.setIdKhachHang(rs.getInt("id_khach_hang"));
+                hd.setTenKhachHang(rs.getString("ten_khach_hang")); // <-- quan trọng
+                hd.setNgayLap(rs.getString("ngay_lap"));
+                hd.setTongTien(rs.getDouble("tong_tien"));
+                hd.setTrangThai(rs.getString("trang_thai"));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
         return hd;
     }
@@ -305,6 +302,42 @@ public class HoaDonDAO {
 
         } catch (Exception e) {
             System.out.println("Lỗi delete HoaDon: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean insert(HoaDonEntity hd) {
+        String sql = "INSERT INTO HoaDon (id_khach_hang, ngay_lap, tong_tien, trang_thai) VALUES (?, ?, ?, ?)";
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setInt(1, hd.getIdKhachHang());
+            ps.setString(2, hd.getNgayLap());
+            ps.setDouble(3, hd.getTongTien());
+            ps.setString(4, hd.getTrangThai());
+            int affected = ps.executeUpdate();
+            if (affected == 0) {
+                return false;
+            }
+            // lấy id trả về nếu cần
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                hd.setIdHoaDon(rs.getInt(1));
+            }
+            return true;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+    // Cập nhật id khách hàng cho hóa đơn
+
+    public boolean updateKhachHang(int idHoaDon, int idKhachHang) {
+        String sql = "UPDATE HoaDon SET id_khach_hang = ? WHERE id_hoa_don = ?";
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idKhachHang);
+            ps.setInt(2, idHoaDon);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
             return false;
         }
     }

@@ -4,23 +4,23 @@
  */
 package entity;
 
+// ======= Class ThongTinTamHoaDon.java =======
 import java.io.Serializable;
 
-/**
- *
- * @author duchi
- */
 public class ThongTinTamHoaDon implements Serializable {
+
     private String tenKhachHang;
     private String sdt;
     private int tongSoLuong;
     private double tongTien;
+    private double tienKhachDua; // ✅ thêm trường lưu tiền khách đưa
 
-    public ThongTinTamHoaDon(String tenKhachHang, String sdt, int tongSoLuong, double tongTien) {
+    public ThongTinTamHoaDon(String tenKhachHang, String sdt, int tongSoLuong, double tongTien, double tienKhachDua) {
         this.tenKhachHang = tenKhachHang;
         this.sdt = sdt;
         this.tongSoLuong = tongSoLuong;
         this.tongTien = tongTien;
+        this.tienKhachDua = tienKhachDua;
     }
 
     public String getTenKhachHang() {
@@ -37,5 +37,13 @@ public class ThongTinTamHoaDon implements Serializable {
 
     public double getTongTien() {
         return tongTien;
+    }
+
+    public double getTienKhachDua() {
+        return tienKhachDua;
+    }
+
+    public void setTienKhachDua(double tienKhachDua) {
+        this.tienKhachDua = tienKhachDua;
     }
 }

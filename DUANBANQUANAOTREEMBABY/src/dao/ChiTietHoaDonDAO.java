@@ -248,13 +248,27 @@ public class ChiTietHoaDonDAO {
         return false;
     }
 
+//    public int getTongSoLuong(int idHoaDon) {
+//        int tong = 0;
+//        List<ChiTietHoaDonEntity> list = getByIdHoaDon(idHoaDon);
+//        for (ChiTietHoaDonEntity ct : list) {
+//            tong += ct.getSoLuong();
+//        }
+//        return tong;
+//    }
     public int getTongSoLuong(int idHoaDon) {
         int tong = 0;
-        List<ChiTietHoaDonEntity> list = getByIdHoaDon(idHoaDon);
-        for (ChiTietHoaDonEntity ct : list) {
-            tong += ct.getSoLuong();
+        String sql = "SELECT SUM(so_luong) FROM ChiTietHoaDon WHERE id_hoa_don = ?";
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idHoaDon);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                tong = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return tong;
     }
-    
+
 }

@@ -4,7 +4,6 @@
  */
 package view;
 
-
 import dao.ChiTietHoaDonDAO;
 import dao.HoaDonDAO;
 import entity.ChiTietHoaDonEntity;
@@ -35,13 +34,16 @@ public class QuanLyHoaDonJPanel extends javax.swing.JPanel {
     public void fillTable() {
         DefaultTableModel model = (DefaultTableModel) tblHoaDon.getModel();
         model.setRowCount(0);
+
         List<HoaDonEntity> list = hoaDonDAO.getAll();
+        DecimalFormat df = new DecimalFormat("#,### VNĐ");
+
         for (HoaDonEntity hd : list) {
             Object[] data = {
                 hd.getIdHoaDon(),
-                hd.getTenKhachHang(),
+                hd.getTenKhachHang(), //!= null ? hd.getTenKhachHang() : "Khách lẻ"
                 hd.getNgayLap(),
-                hd.getTongTien(),
+                df.format(hd.getTongTien()),
                 hd.getTrangThai()
             };
             model.addRow(data);
@@ -154,7 +156,15 @@ public class QuanLyHoaDonJPanel extends javax.swing.JPanel {
             new String [] {
                 "ID sản phẩm", "Tên sản phẩm", "Danh mục", "Màu sắc", "Kích thước", "Số lượng", "Đơn giá", "Thành tiền"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane2.setViewportView(tblChiTietHoaDon);
 
         tblHoaDon.setModel(new javax.swing.table.DefaultTableModel(
@@ -169,7 +179,7 @@ public class QuanLyHoaDonJPanel extends javax.swing.JPanel {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, true, true, true
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -192,15 +202,15 @@ public class QuanLyHoaDonJPanel extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(64, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(txtTimKiemHoaDon, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
                         .addComponent(btnTimKiem)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnCapNhat))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 501, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 545, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8)
