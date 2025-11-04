@@ -4,10 +4,10 @@
  */
 package view;
 
-
 import dao.DanhMucDAO;
 import entity.DanhMucEntity;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -16,32 +16,70 @@ import javax.swing.table.DefaultTableModel;
  */
 public class QuanLyDanhMucJPanel extends javax.swing.JPanel {
 
+    // Khai báo đối tượng DAO để thao tác với cơ sở dữ liệu (CSDL)
     DanhMucDAO danhMucDAO = new DanhMucDAO();
 
-    /**
-     * Creates new form DanhMucJPanel
-     */
+    // Hàm khởi tạo - chạy đầu tiên khi tạo JPanel
     public QuanLyDanhMucJPanel() {
-        initComponents();
-        fillTable();
+        initComponents();   // Hàm NetBeans tự sinh (tạo nút, bảng, textfield, label...)
+        fillTable();        // Gọi hàm để lấy dữ liệu từ database và hiển thị lên bảng
     }
 
+    // 🧾 Hàm lấy dữ liệu từ CSDL và hiển thị ra JTable
     public void fillTable() {
+        // Lấy model (dữ liệu) của bảng
         DefaultTableModel model = (DefaultTableModel) tblDanhMuc.getModel();
-        model.setRowCount(0);
+        model.setRowCount(0); // Xóa dữ liệu cũ trong bảng trước khi thêm dữ liệu mới
 
+        // Lấy toàn bộ danh sách danh mục từ database thông qua DAO
         List<DanhMucEntity> list = danhMucDAO.getAll();
 
+        // Duyệt từng danh mục trong danh sách và đưa vào bảng
         for (DanhMucEntity dm : list) {
             Object[] data = {
                 dm.getIdDanhMuc(),
-                dm.getTenDanhMuc(),
-                dm.getMoTa()
+                dm.getTenDanhMuc(), // Cột 1: Tên danh mục
+                dm.getMoTa() // Cột 2: Mô tả
             };
-            model.addRow(data);
+            model.addRow(data); // Thêm 1 dòng vào bảng
         }
 
+        // Cập nhật lại model cho bảng
         tblDanhMuc.setModel(model);
+    }
+
+    // 📦 Hàm lấy dữ liệu nhập trên form và tạo đối tượng DanhMucEntity
+    public DanhMucEntity getDanhMuc() {
+        try {
+            String tenDM = txtTenDanhMuc.getText().trim(); // Lấy tên danh mục từ ô nhập
+            String moTa = txtMoTa.getText().trim();        // Lấy mô tả từ ô nhập
+
+            // Kiểm tra xem người dùng có bỏ trống không
+            if (tenDM.isEmpty() || moTa.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ tên danh mục và mô tả!");
+                return null; // Nếu thiếu dữ liệu thì dừng lại
+            }
+
+            // Nếu hợp lệ, trả về 1 đối tượng DanhMucEntity (chứa thông tin danh mục)
+            return new DanhMucEntity(tenDM, moTa);
+
+        } catch (Exception e) {
+            // Nếu có lỗi trong quá trình lấy dữ liệu thì báo lỗi ra hộp thoại
+            JOptionPane.showMessageDialog(this, "Lỗi khi lấy dữ liệu danh mục: " + e.getMessage());
+            return null;
+        }
+    }
+
+    // 🪄 Hàm hiển thị dữ liệu từ Entity lên form (dùng khi bấm vào 1 dòng trên bảng)
+    public void setDanhMuc(DanhMucEntity dm) {
+        txtTenDanhMuc.setText(dm.getTenDanhMuc()); // Gán tên danh mục lên ô nhập
+        txtMoTa.setText(dm.getMoTa());             // Gán mô tả lên ô nhập
+    }
+
+    // 🧹 Hàm xóa trắng form (reset các ô nhập)
+    public void clearForm() {
+        txtTenDanhMuc.setText(""); // Xóa nội dung ô tên danh mục
+        txtMoTa.setText("");       // Xóa nội dung ô mô tả
     }
 
     /**
@@ -54,9 +92,9 @@ public class QuanLyDanhMucJPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnThem = new javax.swing.JButton();
+        btnSua = new javax.swing.JButton();
+        btnXoa = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblDanhMuc = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
@@ -64,40 +102,55 @@ public class QuanLyDanhMucJPanel extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         txtMoTa = new javax.swing.JTextField();
         txtTenDanhMuc = new javax.swing.JTextField();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        btnCapNhat = new javax.swing.JButton();
+        btnTimKiem = new javax.swing.JButton();
+        txtTimKiem = new javax.swing.JTextField();
 
         jPanel1.setBackground(new java.awt.Color(255, 153, 204));
 
-        jButton1.setText("Thêm");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnThem.setText("Thêm");
+        btnThem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnThemActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Sửa");
+        btnSua.setText("Sửa");
+        btnSua.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSuaActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Xóa");
+        btnXoa.setText("Xóa");
+        btnXoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXoaActionPerformed(evt);
+            }
+        });
 
         tblDanhMuc.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Tên danh mục", "Mô tả"
+                "Id danh mục", "Tên danh mục", "Mô tả"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                true, false
+                false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tblDanhMuc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblDanhMucMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(tblDanhMuc);
@@ -109,9 +162,19 @@ public class QuanLyDanhMucJPanel extends javax.swing.JPanel {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel5.setText("DANH MỤC");
 
-        jButton4.setText("Cập nhật");
+        btnCapNhat.setText("Cập nhật");
+        btnCapNhat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCapNhatActionPerformed(evt);
+            }
+        });
 
-        jButton5.setText("Tìm kiếm");
+        btnTimKiem.setText("Tìm kiếm");
+        btnTimKiem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTimKiemActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -121,9 +184,9 @@ public class QuanLyDanhMucJPanel extends javax.swing.JPanel {
                 .addContainerGap(48, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
-                        .addComponent(jButton5))
+                        .addComponent(btnTimKiem))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 607, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(jPanel1Layout.createSequentialGroup()
@@ -136,15 +199,15 @@ public class QuanLyDanhMucJPanel extends javax.swing.JPanel {
                                     .addGap(39, 39, 39))
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addGap(42, 42, 42)
-                                    .addComponent(jButton1)
+                                    .addComponent(btnThem)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButton2)
+                                    .addComponent(btnSua)
                                     .addGap(63, 63, 63)))
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jButton3)
+                                    .addComponent(btnXoa)
                                     .addGap(63, 63, 63)
-                                    .addComponent(jButton4))
+                                    .addComponent(btnCapNhat))
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addComponent(jLabel2)
                                     .addGap(24, 24, 24)
@@ -167,14 +230,14 @@ public class QuanLyDanhMucJPanel extends javax.swing.JPanel {
                     .addComponent(jLabel2))
                 .addGap(37, 37, 37)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
+                    .addComponent(btnThem)
+                    .addComponent(btnSua)
+                    .addComponent(btnXoa)
+                    .addComponent(btnCapNhat))
                 .addGap(30, 30, 30)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton5)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnTimKiem)
+                    .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -192,25 +255,204 @@ public class QuanLyDanhMucJPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+        // Khi người dùng nhấn nút "Thêm"
+        if (this.getDanhMuc() != null) {
+            // Nếu lấy được thông tin danh mục từ form (nghĩa là người dùng đã nhập đủ)
+
+            this.danhMucDAO.insert(this.getDanhMuc());
+            // Gọi tới lớp DanhMucDAO để thêm danh mục mới vào cơ sở dữ liệu.
+            // Hàm getDanhMuc() lấy tên và mô tả danh mục người dùng đã nhập.
+
+            JOptionPane.showMessageDialog(btnThem, "Thêm danh mục thành công!");
+            // Hiển thị thông báo popup cho người dùng biết là thêm thành công.
+
+            fillTable();
+            // Sau khi thêm xong, gọi lại hàm fillTable() để tải lại bảng dữ liệu danh mục.
+        }
+    }//GEN-LAST:event_btnThemActionPerformed
+
+    private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
+        // Lấy hàng đang chọn
+        int row = tblDanhMuc.getSelectedRow();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một danh mục!");
+            return;
+        }
+
+// Lấy ID danh mục từ cột 0 hoặc cột bạn lưu ID
+        int idDanhMuc = Integer.parseInt(tblDanhMuc.getValueAt(row, 0).toString());
+
+// Lấy tên và mô tả mới từ ô nhập liệu
+        String tenMoi = txtTenDanhMuc.getText().trim();
+        String moTa = txtMoTa.getText().trim();
+
+        if (tenMoi.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên danh mục mới!");
+            return;
+        }
+
+// Tạo đối tượng DanhMucEntity cho danh mục cũ và mới
+        DanhMucEntity dmCu = new DanhMucEntity();
+        dmCu.setIdDanhMuc(idDanhMuc);  // ✅ dùng ID thay vì tên
+
+        DanhMucEntity dmMoi = new DanhMucEntity();
+        dmMoi.setTenDanhMuc(tenMoi);
+        dmMoi.setMoTa(moTa);
+
+// Gọi DAO
+        DanhMucDAO dao = new DanhMucDAO();
+        int result = dao.updateDanhMuc_DoiTen(dmCu, dmMoi);
+
+        if (result > 0) {
+            JOptionPane.showMessageDialog(this, "Đã cập nhật danh mục thành công!");
+            fillTable(); // tải lại bảng
+        } else {
+            JOptionPane.showMessageDialog(this, "Không tìm thấy danh mục với ID: " + idDanhMuc);
+        }
+    }//GEN-LAST:event_btnSuaActionPerformed
+
+    private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
+        // TODO add your handling code here:
+        // TODO add your handling code here:                              
+        // Lấy tên danh mục mà người dùng nhập trong ô txtTenDanhMuc
+        String tenDM = txtTenDanhMuc.getText().trim();
+        // → .trim() xóa khoảng trắng ở đầu và cuối để tránh lỗi khi nhập dư dấu cách.
+
+        // Nếu người dùng chưa nhập gì thì báo lỗi và dừng lại
+        if (tenDM.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên danh mục cần xóa!");
+            return; // Dừng chương trình, không xóa
+        }
+
+        // Hộp thoại xác nhận: hỏi người dùng có chắc muốn xóa hay không
+        if (JOptionPane.showConfirmDialog(this,
+                "Bạn có chắc muốn xóa danh mục: " + tenDM + " ?", // nội dung thông báo
+                "Xác nhận", // tiêu đề hộp thoại
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) { // nếu người dùng chọn YES
+
+            try {
+                // Tạo đối tượng DAO để làm việc với cơ sở dữ liệu
+                DanhMucDAO dao = new DanhMucDAO();
+
+                // Gọi hàm xóa danh mục theo tên
+                dao.deleteByTenDanhMuc(tenDM);
+
+                // Cập nhật lại bảng hiển thị danh mục sau khi xóa
+                fillTable();
+
+                // Xóa trắng các ô nhập liệu
+                clearForm();
+
+                // Thông báo thành công
+                JOptionPane.showMessageDialog(this, "Xóa danh mục thành công!");
+
+            } catch (Exception e) {
+                // Nếu có lỗi (ví dụ: không kết nối được DB), báo lỗi ra
+                JOptionPane.showMessageDialog(this, "Lỗi khi xóa danh mục: " + e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_btnXoaActionPerformed
+
+    private void btnCapNhatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCapNhatActionPerformed
+        // TODO add your handling code here:
+        // Xóa nội dung trong ô nhập "Tên danh mục"
+        txtTenDanhMuc.setText("");
+
+        // Xóa nội dung trong ô nhập "Mô tả"
+        txtMoTa.setText("");
+
+        // Xóa nội dung trong ô tìm kiếm (nếu có)
+        txtTimKiem.setText("");
+
+        // Bỏ chọn bất kỳ hàng nào đang được chọn trong bảng
+        tblDanhMuc.clearSelection();
+
+        // Gọi lại hàm fillTable() để tải lại toàn bộ dữ liệu danh mục từ CSDL
+        fillTable();
+    }//GEN-LAST:event_btnCapNhatActionPerformed
+
+    private void tblDanhMucMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDanhMucMouseClicked
+        // TODO add your handling code here:
+        // TODO add your handling code here:
+        // Lấy chỉ số của hàng (row) mà người dùng đang chọn trong bảng
+        int row = tblDanhMuc.getSelectedRow();
+
+        // Nếu người dùng chưa chọn hàng nào (row = -1) thì thoát ra luôn, không làm gì
+        if (row < 0) {
+            return;
+        }
+
+        // Nếu có chọn rồi thì thực hiện lấy dữ liệu từ bảng hiển thị lên form
+        // Lấy giá trị ở cột 0 (tức là cột “Tên danh mục”) của hàng đang chọn
+        // Sau đó gán vào ô nhập txtTenDanhMuc
+        txtTenDanhMuc.setText(tblDanhMuc.getValueAt(row, 1).toString());
+
+        // Lấy giá trị ở cột 1 (tức là cột “Mô tả”) của hàng đang chọn
+        // Sau đó gán vào ô nhập txtMoTa
+        txtMoTa.setText(tblDanhMuc.getValueAt(row, 2).toString());
+    }//GEN-LAST:event_tblDanhMucMouseClicked
+
+    private void btnTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimKiemActionPerformed
+        // TODO add your handling code here:
+        String keyword = txtTimKiem.getText().trim(); // Lấy nội dung trong ô tìm kiếm
+
+        // Nếu không nhập gì -> thông báo + load lại bảng
+        if (keyword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập ID để tìm kiếm!");
+            fillTable(); // Gọi lại hàm load toàn bộ danh mục
+            return;
+        }
+
+        // Kiểm tra xem có phải số hay không
+        int id;
+        try {
+            id = Integer.parseInt(keyword);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "ID phải là số nguyên! Bảng sẽ giữ nguyên.");
+            return;
+        }
+
+        // Gọi DAO để tìm kiếm theo ID
+        DanhMucDAO dao = new DanhMucDAO();
+        List<DanhMucEntity> list = dao.search(String.valueOf(id)); // ✅ Gọi hàm tìm theo ID
+
+        // Nếu không tìm thấy -> thông báo + giữ nguyên bảng
+        if (list == null || list.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Không tìm thấy danh mục có ID = " + id);
+            return;
+        }
+
+        // Nếu tìm thấy -> hiển thị kết quả tìm được
+        DefaultTableModel model = (DefaultTableModel) tblDanhMuc.getModel();
+        model.setRowCount(0); // Xóa dữ liệu cũ trong bảng
+
+        for (DanhMucEntity dm : list) {
+            Object[] row = {
+                dm.getIdDanhMuc(),
+                dm.getTenDanhMuc(),
+                dm.getMoTa()
+            };
+            model.addRow(row);
+        }
+    }//GEN-LAST:event_btnTimKiemActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton btnCapNhat;
+    private javax.swing.JButton btnSua;
+    private javax.swing.JButton btnThem;
+    private javax.swing.JButton btnTimKiem;
+    private javax.swing.JButton btnXoa;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTable tblDanhMuc;
     private javax.swing.JTextField txtMoTa;
     private javax.swing.JTextField txtTenDanhMuc;
+    private javax.swing.JTextField txtTimKiem;
     // End of variables declaration//GEN-END:variables
 }

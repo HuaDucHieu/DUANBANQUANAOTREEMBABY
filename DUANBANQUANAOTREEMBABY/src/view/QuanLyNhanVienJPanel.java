@@ -4,28 +4,90 @@
  */
 package view;
 
+import dao.NhanVienDAO;
+import entity.NhanVienEntity;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Tran Tien
  */
 public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
 
-
+    NhanVienDAO nvDAO = new NhanVienDAO();
 
     /**
      * Creates new form QuanLyKhanhHangJPanel
      */
     public QuanLyNhanVienJPanel() {
         initComponents();
-        
+        fillTable();
     }
 
-    
+    public void fillTable() {
+        DefaultTableModel model = (DefaultTableModel) tblNhanVien.getModel();
+        model.setRowCount(0);
+
+        for (NhanVienEntity nv : nvDAO.getAll()) {
+            Object[] data = {
+                nv.getIdNhanVien(), // id nhân viên
+                nv.getHoTen(), // họ tên
+                nv.getEmail(), // chức vụ
+                nv.getMatKhau(), // mật khẩu
+                nv.getChucVu() // email
+            };
+            model.addRow(data);
+        }
+    }
+
+    public NhanVienEntity getNhanVien() {
+        try {
+            String hoTen = txtTenNV.getText().trim();
+            String chucVu = cboChucVu.getSelectedItem().toString();
+            String matKhau = txtMatKhau.getText().trim();
+            String email = txtEmail.getText().trim();
+
+            // Kiểm tra dữ liệu
+            if (hoTen.isEmpty() || email.isEmpty() || matKhau.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!");
+                return null;
+            }
+
+            // Kiểm tra định dạng email
+            String emailRegex = "^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$";
+            if (!email.matches(emailRegex)) {
+                JOptionPane.showMessageDialog(this, "Email không hợp lệ!");
+                return null;
+            }
+
+            return new NhanVienEntity(hoTen, email, matKhau, chucVu);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Lỗi khi lấy dữ liệu nhân viên: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public void setNhanVien(NhanVienEntity nv) {
+        txtTenNV.setText(nv.getHoTen());
+        cboChucVu.setSelectedItem(nv.getChucVu());
+        txtMatKhau.setText(nv.getMatKhau());
+        txtEmail.setText(nv.getEmail());
+
+    }
+
+    public void clearForm() {
+        txtTenNV.setText("");
+        cboChucVu.setSelectedIndex(0);
+        txtMatKhau.setText("");
+        txtEmail.setText("");
+    }
 
     /**
      * Creates new form NhanVienJPanel
      */
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -41,7 +103,7 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         txtMatKhau = new javax.swing.JTextField();
         cboChucVu = new javax.swing.JComboBox<>();
-        btnThemNV = new javax.swing.JButton();
+        btnThem = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         btnSua = new javax.swing.JButton();
@@ -61,10 +123,10 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
 
         cboChucVu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Quản lý", "Thu ngân", "Nhân viên" }));
 
-        btnThemNV.setText("Thêm");
-        btnThemNV.addActionListener(new java.awt.event.ActionListener() {
+        btnThem.setText("Thêm");
+        btnThem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnThemNVActionPerformed(evt);
+                btnThemActionPerformed(evt);
             }
         });
 
@@ -107,6 +169,11 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblNhanVien.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblNhanVienMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblNhanVien);
 
         jLabel7.setText("Email");
@@ -114,6 +181,11 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
         jLabel8.setText("Mật khẩu");
 
         btnCapNhat.setText("Cập nhật");
+        btnCapNhat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCapNhatActionPerformed(evt);
+            }
+        });
 
         btnTimKiem.setText("Tìm kiếm");
         btnTimKiem.addActionListener(new java.awt.event.ActionListener() {
@@ -148,7 +220,7 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
                                                 .addComponent(cboChucVu, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addComponent(txtTenNV, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                         .addGroup(jPanel1Layout.createSequentialGroup()
-                                            .addComponent(btnThemNV)
+                                            .addComponent(btnThem)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(btnSua)))
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -186,7 +258,7 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
                     .addComponent(jLabel8))
                 .addGap(44, 44, 44)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnThemNV)
+                    .addComponent(btnThem)
                     .addComponent(btnSua)
                     .addComponent(btnXoa)
                     .addComponent(btnCapNhat))
@@ -216,24 +288,71 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_txtMatKhauActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
-        
+        // TODO add your handling code here:int row = tblNhanVien.getSelectedRow();
+        int row = tblNhanVien.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên để xóa!");
+            return;
+        }
+        int id = (int) tblNhanVien.getValueAt(row, 0);
+        if (JOptionPane.showConfirmDialog(this, "Xóa nhân viên này?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            nvDAO.delete(id);
+            fillTable();
+            clearForm();
+            JOptionPane.showMessageDialog(this, "Xóa thành công!");
+        }
     }//GEN-LAST:event_btnXoaActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
-        
-       
+        // TODO add your handling code here:
+        int row = tblNhanVien.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên để sửa!");
+            return;
+        }
 
-        
+        // Lấy dữ liệu từ form
+        int id = Integer.parseInt(tblNhanVien.getValueAt(row, 0).toString()); // cột 0 là ID
+        String hoTen = txtTenNV.getText();
+        String chucVu = cboChucVu.getSelectedItem().toString();
+        String matKhau = txtMatKhau.getText();
+        String email = txtEmail.getText();
+
+        // Gán dữ liệu vào Entity
+        NhanVienEntity nv = new NhanVienEntity();
+        nv.setIdNhanVien(id);
+        nv.setHoTen(hoTen);
+        nv.setChucVu(chucVu);
+        nv.setMatKhau(matKhau);
+        nv.setEmail(email);
+
+        // Gọi DAO cập nhật
+        NhanVienDAO dao = new NhanVienDAO();
+        if (dao.update(nv) > 0) {
+            JOptionPane.showMessageDialog(this, "Cập nhật nhân viên thành công!");
+            fillTable(); // ✅ Load lại bảng
+            clearForm(); // ✅ Xóa trắng form
+        } else {
+            JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
+        }
+
     }//GEN-LAST:event_btnSuaActionPerformed
 
-    private void btnThemNVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemNVActionPerformed
-        
-    }//GEN-LAST:event_btnThemNVActionPerformed
+    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
+        // TODO add your handling code here:
+        if (this.getNhanVien() != null) {
+            this.nvDAO.insert((NhanVienEntity) this.getNhanVien());
+            JOptionPane.showMessageDialog(btnThem, "Thêm nhân viên thành công");
+            fillTable();
+        }
+    }//GEN-LAST:event_btnThemActionPerformed
 
     private void tblNhanVienMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblNhanVienMouseClicked
         // TODO add your handling code here:
         int row = tblNhanVien.getSelectedRow();
-        if (row < 0) return;
+        if (row < 0) {
+            return;
+        }
 
         txtTenNV.setText(tblNhanVien.getValueAt(row, 1).toString());
         cboChucVu.setSelectedItem(tblNhanVien.getValueAt(row, 2).toString());
@@ -243,25 +362,88 @@ public class QuanLyNhanVienJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_tblNhanVienMouseClicked
 
     private void btnTimKiemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTimKiemMouseClicked
-        
-      
+
+
     }//GEN-LAST:event_btnTimKiemMouseClicked
 
     private void btnCapNhatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCapNhatMouseClicked
-        
+
     }//GEN-LAST:event_btnCapNhatMouseClicked
 
 
     private void btnTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimKiemActionPerformed
         // TODO add your handling code here:
+        String keyword = txtTimKiem.getText().trim(); // Lấy nội dung ô tìm kiếm
+
+// Kiểm tra nhập trống
+        if (keyword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập ID để tìm kiếm!");
+            fillTable(); // load lại bảng
+            return;
+        }
+
+// Kiểm tra xem có phải số nguyên không
+        int id;
+        try {
+            id = Integer.parseInt(keyword);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "ID phải là số nguyên! Bảng sẽ giữ nguyên.");
+            return;
+        }
+
+// Gọi DAO để lấy nhân viên theo ID chính xác
+        NhanVienDAO dao = new NhanVienDAO();
+        NhanVienEntity nv = dao.getById(id); // chỉ lấy chính xác ID
+        List<NhanVienEntity> list = new ArrayList<>();
+        if (nv != null) {
+            list.add(nv); // thêm vào list để dùng chung với table model
+        }
+
+// Nếu không tìm thấy
+        if (list.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên có ID: " + id);
+            return;
+        }
+
+// Hiển thị kết quả ra JTable
+        DefaultTableModel model = (DefaultTableModel) tblNhanVien.getModel();
+        model.setRowCount(0); // xóa dữ liệu cũ
+
+        for (NhanVienEntity n : list) {
+            Object[] row = {
+                n.getIdNhanVien(),
+                n.getHoTen(),
+                n.getChucVu(),
+                n.getMatKhau(),
+                n.getEmail()
+            };
+            model.addRow(row);
+        }
+
     }//GEN-LAST:event_btnTimKiemActionPerformed
 
+    private void btnCapNhatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCapNhatActionPerformed
+        // TODO add your handling code here:
+        // TODO add your handling code here: 
+        txtTenNV.setText("");
+        cboChucVu.setSelectedIndex(0); // chọn lại mặc định nếu muốn
+        txtMatKhau.setText("");
+        txtEmail.setText("");
+
+        txtTimKiem.setText("");
+
+        // Bỏ chọn hàng trên bảng
+        tblNhanVien.clearSelection();
+
+        // Load lại bảng
+        fillTable();
+    }//GEN-LAST:event_btnCapNhatActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCapNhat;
     private javax.swing.JButton btnSua;
-    private javax.swing.JButton btnThemNV;
+    private javax.swing.JButton btnThem;
     private javax.swing.JButton btnTimKiem;
     private javax.swing.JButton btnXoa;
     private javax.swing.ButtonGroup buttonGroup1;

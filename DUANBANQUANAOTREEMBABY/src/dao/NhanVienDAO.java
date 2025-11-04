@@ -115,4 +115,25 @@ public class NhanVienDAO {
 
         return list;
     }
+
+    public NhanVienEntity getById(int id) {
+        String sql = "SELECT * FROM NhanVien WHERE id_nhan_vien = ?";
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                NhanVienEntity nv = new NhanVienEntity();
+                nv.setIdNhanVien(rs.getInt("id_nhan_vien"));
+                nv.setHoTen(rs.getString("ho_ten"));
+                nv.setChucVu(rs.getString("chuc_vu"));
+                nv.setMatKhau(rs.getString("mat_khau"));
+                nv.setEmail(rs.getString("email"));
+                return nv;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

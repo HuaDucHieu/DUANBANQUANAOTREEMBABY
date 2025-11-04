@@ -130,25 +130,32 @@ public class SanPhamDAO {
         return list;
     }
 
-    public List<KhachHangEntity> search(String keyword) {
-        List<KhachHangEntity> list = new ArrayList<>();
-        String sql = "SELECT * FROM KhachHang WHERE CAST(id_khach_hang AS NVARCHAR) LIKE ? OR ho_ten LIKE ?";
+    public List<SanPhamEntity> search(String keyword) {
+        List<SanPhamEntity> list = new ArrayList<>();
+        String sql = "SELECT * FROM SanPham WHERE id_sp = ?";
         try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setString(1, "%" + keyword + "%");
-            ps.setString(2, "%" + keyword + "%");
+            // Chuyển keyword thành số (id)
+            ps.setInt(1, Integer.parseInt(keyword));
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                KhachHangEntity kh = new KhachHangEntity();
-                kh.setIdKhachHang(rs.getInt("id_khach_hang"));
-                kh.setHoTen(rs.getString("ho_ten"));
-                kh.setSdt(rs.getString("sdt"));
-                list.add(kh);
+                SanPhamEntity sp = new SanPhamEntity();
+                sp.setIdSp(rs.getInt("id_sp"));
+                sp.setTenSp(rs.getString("ten_sp"));
+                sp.setGia(rs.getDouble("gia"));
+                sp.setSoLuong(rs.getInt("so_luong"));
+                sp.setIdDanhMuc(rs.getInt("id_danh_muc"));
+                sp.setTrangThai(rs.getString("trang_thai"));
+                sp.setIdMauSac(rs.getInt("id_mau_sac"));
+                sp.setIdKichThuoc(rs.getInt("id_kich_thuoc"));
+                list.add(sp);
             }
+
+        } catch (NumberFormatException e) {
+            System.out.println("ID không hợp lệ (không phải số): " + keyword);
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Lỗi tìm kiếm khách hàng: " + e.getMessage());
+            System.out.println("Lỗi tìm kiếm SanPham: " + e.getMessage());
         }
         return list;
     }
