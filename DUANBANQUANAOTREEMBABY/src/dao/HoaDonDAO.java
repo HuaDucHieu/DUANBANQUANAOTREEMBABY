@@ -45,6 +45,30 @@ public class HoaDonDAO {
         return list;
     }
 
+    public List<HoaDonEntity> getHoaDonTK() {
+        List<HoaDonEntity> list = new ArrayList<>();
+        String sql = "SELECT id_hoa_don, id_khach_hang, ngay_lap, tong_tien, trang_thai "
+                + "FROM HoaDon ORDER BY id_hoa_don ASC";
+
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                HoaDonEntity hd = new HoaDonEntity();
+                hd.setIdHoaDon(rs.getInt("id_hoa_don"));
+                hd.setIdKhachHang(rs.getInt("id_khach_hang"));
+                hd.setNgayLap(rs.getString("ngay_lap")); // giữ String nhưng parse đúng format sau
+                hd.setTongTien(rs.getDouble("tong_tien"));
+                hd.setTrangThai(rs.getString("trang_thai"));
+                list.add(hd);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Lỗi getAll HoaDonThongKe: " + e.getMessage());
+        }
+
+        return list;
+    }
+
     public List<HoaDonEntity> getHoaDonCho() {
         List<HoaDonEntity> list = new ArrayList<>();
         String sql = "SELECT id_hoa_don, ngay_lap, trang_thai "

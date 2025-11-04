@@ -8,6 +8,9 @@ import dao.*;
 import entity.HoaDonEntity;
 import entity.HoaDonEntity;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -30,49 +33,36 @@ public class ThongKeJPanel extends javax.swing.JPanel {
         fillThongKe();
     }
 
+    // --- Fill toàn bộ hóa đơn ---
     public void fillTable() {
-        DefaultTableModel model = (DefaultTableModel) tblHoaDon.getModel();
-        model.setRowCount(0);
-        for (HoaDonEntity hd : hoaDonDAO.getAll()) {
-            Object data[] = {
-                hd.getIdHoaDon(),
-                hd.getNgayLap(),
-                hd.getIdKhachHang(),
-                hd.getTongTien(),
-                hd.getTrangThai()
-            };
-            model.addRow(data);
-        }
-        tblHoaDon.setModel(model);
+        List<HoaDonEntity> list = hoaDonDAO.getHoaDonTK();
+        fillTable(list);
     }
 
+    // --- Fill hóa đơn từ list ---
     public void fillTable(List<HoaDonEntity> list) {
         DefaultTableModel model = (DefaultTableModel) tblHoaDon.getModel();
-        model.setRowCount(0);
+        model.setRowCount(0); // Xóa dữ liệu cũ
 
         for (HoaDonEntity hd : list) {
-            Object[] data = {
+            Object[] row = {
                 hd.getIdHoaDon(),
                 hd.getNgayLap(),
                 hd.getIdKhachHang(),
                 hd.getTongTien(),
                 hd.getTrangThai()
             };
-            model.addRow(data);
+            model.addRow(row);
         }
-        tblHoaDon.setModel(model);
     }
 
+    // --- Thống kê tổng ---
     private void fillThongKe() {
-        double tongDoanhThu = hoaDonDAO.getTongDoanhThu();
-        int tongHoaDon = hoaDonDAO.getTongSoHoaDon();
-        int daThanhToan = hoaDonDAO.getSoHoaDonDaThanhToan();
-
-        lblTongDoanhThu.setText("Tổng doanh thu: " + String.format("%,.0f VND", tongDoanhThu));
-        lblTongHoaDon.setText("Tổng hóa đơn: " + tongHoaDon);
-        lblDaThanhToan.setText("Đã thanh toán: " + daThanhToan);
+        List<HoaDonEntity> list = hoaDonDAO.getHoaDonTK();
+        fillThongKe(list);
     }
 
+    // --- Thống kê từ list ---
     public void fillThongKe(List<HoaDonEntity> list) {
         double tongDoanhThu = 0;
         int soHoaDon = 0;
@@ -246,7 +236,12 @@ public class ThongKeJPanel extends javax.swing.JPanel {
 
         lblLocNhanh.setText("Lọc nhanh:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "3 ngày gần nhất", "1 tuần", "1 tháng" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "3 ngày gần nhất", "1 tuần", "1 tháng", "1 năm" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -257,38 +252,35 @@ public class ThongKeJPanel extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(lblLocNhanh)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(lblTuNgay)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(dateTuNgay, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(lblDenNgay)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(dateDenNgay, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(18, 18, 18)
-                                .addComponent(btnLoc))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(26, 26, 26)
-                                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(31, 31, 31)
-                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1008, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(lblLocNhanh)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(lblTuNgay)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(dateTuNgay, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(lblDenNgay)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(dateDenNgay, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGap(18, 18, 18)
+                            .addComponent(btnLoc))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel2)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(26, 26, 26)
+                                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGap(31, 31, 31)
+                            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 1008, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -351,37 +343,39 @@ public class ThongKeJPanel extends javax.swing.JPanel {
         }
     }
 
-    // Lọc nhanh bằng ComboBox
+    // --- Lọc nhanh bằng ComboBox ---
     private void locNhanh() {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            java.util.Date now = new java.util.Date();
-            java.util.Date tuNgay = now;
-
             String selected = (String) jComboBox1.getSelectedItem();
-
-            switch (selected) {
-                case "3 ngày gần nhất":
-                    tuNgay = new java.util.Date(now.getTime() - 3L * 24 * 60 * 60 * 1000);
-                    break;
-                case "1 tuần":
-                    tuNgay = new java.util.Date(now.getTime() - 7L * 24 * 60 * 60 * 1000);
-                    break;
-                case "1 tháng":
-                    tuNgay = new java.util.Date(now.getTime() - 30L * 24 * 60 * 60 * 1000);
-                    break;
-                case "Tất cả":
-                    fillTable();
-                    fillThongKe();
-                    return;
+            if ("Tất cả".equals(selected)) {
+                fillTable();
+                fillThongKe();
+                return;
             }
 
-            String from = sdf.format(tuNgay);
-            String to = sdf.format(now);
+            long days = 0;
+            switch (selected) {
+                case "3 ngày gần nhất": days = 3; break;
+                case "1 tuần": days = 7; break;
+                case "1 tháng": days = 30; break;
+                case "1 năm": days = 365; break;
+            }
 
-            List<HoaDonEntity> list = hoaDonDAO.getByDateRange(from, to);
-            fillTable(list);
-            fillThongKe(list);
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DAY_OF_YEAR, -(int)days);
+            Date tuNgay = cal.getTime();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+            List<HoaDonEntity> filtered = new ArrayList<>();
+            for (HoaDonEntity hd : hoaDonDAO.getHoaDonTK()) {
+                Date ngayLap = sdf.parse(hd.getNgayLap());
+                if (!ngayLap.before(tuNgay)) {
+                    filtered.add(hd);
+                }
+            }
+
+            fillTable(filtered);
+            fillThongKe(filtered);
 
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Lỗi khi lọc nhanh: " + ex.getMessage());
@@ -392,6 +386,10 @@ public class ThongKeJPanel extends javax.swing.JPanel {
     private void btnLocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLocMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_btnLocMouseClicked
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
