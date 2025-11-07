@@ -5,7 +5,9 @@
 package view;
 
 import dao.DanhMucDAO;
+import dao.SanPhamDAO;
 import entity.DanhMucEntity;
+import entity.SanPhamEntity;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -315,43 +317,57 @@ public class QuanLyDanhMucJPanel extends javax.swing.JPanel {
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
         // TODO add your handling code here:
-        // TODO add your handling code here:                              
-        // Lấy tên danh mục mà người dùng nhập trong ô txtTenDanhMuc
         String tenDM = txtTenDanhMuc.getText().trim();
-        // → .trim() xóa khoảng trắng ở đầu và cuối để tránh lỗi khi nhập dư dấu cách.
 
-        // Nếu người dùng chưa nhập gì thì báo lỗi và dừng lại
         if (tenDM.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập tên danh mục cần xóa!");
-            return; // Dừng chương trình, không xóa
+            return;
         }
 
-        // Hộp thoại xác nhận: hỏi người dùng có chắc muốn xóa hay không
         if (JOptionPane.showConfirmDialog(this,
-                "Bạn có chắc muốn xóa danh mục: " + tenDM + " ?", // nội dung thông báo
-                "Xác nhận", // tiêu đề hộp thoại
-                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) { // nếu người dùng chọn YES
+                "Bạn có chắc muốn xóa danh mục: " + tenDM + " ?",
+                "Xác nhận", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+            return;
+        }
 
-            try {
-                // Tạo đối tượng DAO để làm việc với cơ sở dữ liệu
-                DanhMucDAO dao = new DanhMucDAO();
+        try {
+            DanhMucDAO danhMucDAO = new DanhMucDAO();
+            SanPhamDAO sanPhamDAO = new SanPhamDAO();
 
-                // Gọi hàm xóa danh mục theo tên
-                dao.deleteByTenDanhMuc(tenDM);
-
-                // Cập nhật lại bảng hiển thị danh mục sau khi xóa
-                fillTable();
-
-                // Xóa trắng các ô nhập liệu
-                clearForm();
-
-                // Thông báo thành công
-                JOptionPane.showMessageDialog(this, "Xóa danh mục thành công!");
-
-            } catch (Exception e) {
-                // Nếu có lỗi (ví dụ: không kết nối được DB), báo lỗi ra
-                JOptionPane.showMessageDialog(this, "Lỗi khi xóa danh mục: " + e.getMessage());
+            // Lấy id danh mục theo tên
+            DanhMucEntity danhMuc = danhMucDAO.findByName(tenDM);
+            if (danhMuc == null) {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy danh mục có tên: " + tenDM);
+                return;
             }
+
+            int idDanhMuc = danhMuc.getIdDanhMuc();
+
+            // Lấy danh sách sản phẩm thuộc danh mục này
+            List<SanPhamEntity> listSP = sanPhamDAO.getSanPhamByDanhMuc(idDanhMuc);
+
+            if (!listSP.isEmpty()) {
+                boolean conSanPhamDangBan = listSP.stream().anyMatch(sp -> {
+                    String trangThai = sp.getTrangThai() == null ? "" : sp.getTrangThai().trim();
+                    return !trangThai.equalsIgnoreCase("Ngừng bán") && !trangThai.equalsIgnoreCase("Hết hàng");
+                });
+
+                if (conSanPhamDangBan) {
+                    JOptionPane.showMessageDialog(this,
+                            "Không thể xóa! Danh mục này vẫn còn sản phẩm đang bán.");
+                    return;
+                }
+            }
+
+            // Nếu tới đây nghĩa là hoặc không có sản phẩm, hoặc tất cả đều ngừng bán/hết hàng → cho phép xóa
+            danhMucDAO.deleteByTenDanhMuc(tenDM);
+
+            fillTable();
+            clearForm();
+            JOptionPane.showMessageDialog(this, "Xóa danh mục thành công!");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Lỗi khi xóa danh mục: " + e.getMessage());
         }
     }//GEN-LAST:event_btnXoaActionPerformed
 

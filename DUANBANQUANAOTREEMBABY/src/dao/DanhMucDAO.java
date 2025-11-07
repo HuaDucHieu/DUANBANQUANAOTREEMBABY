@@ -161,4 +161,22 @@ public class DanhMucDAO {
 
         return list;
     }
+
+    public DanhMucEntity findByName(String tenDM) {
+        String sql = "SELECT * FROM DanhMuc WHERE ten_danh_muc = ?";
+        try (Connection conn = ConnectDB.getConnect(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, tenDM);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                DanhMucEntity dm = new DanhMucEntity();
+                dm.setIdDanhMuc(rs.getInt("id_danh_muc"));
+                dm.setTenDanhMuc(rs.getString("ten_danh_muc"));
+                dm.setMoTa(rs.getString("mo_ta"));
+                return dm;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

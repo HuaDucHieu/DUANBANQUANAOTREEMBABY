@@ -95,7 +95,7 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
         List<SanPhamEntity> list = sanPhamDAO.getAllWithDetails();
         for (SanPhamEntity sp : list) {
             model.addRow(new Object[]{
-                sp.getIdSp(),
+                sp.getIdSanPham(),
                 sp.getTenSp(),
                 sp.getTenDanhMuc(),
                 sp.getTenMauSac(),
@@ -178,6 +178,13 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    private String formatMoney(double amount) {
+        DecimalFormat df = new DecimalFormat("#,###.##");
+        df.setGroupingUsed(true);
+        df.setGroupingSize(3);
+        return df.format(amount);
     }
 
     /**
@@ -453,31 +460,35 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(btnThemSanPham)
+                .addGap(39, 39, 39)
+                .addComponent(btnCapNhat)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(btnTimKiem))
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 336, Short.MAX_VALUE)
-                .addComponent(btnThemSanPham)
-                .addGap(44, 44, 44)
-                .addComponent(btnCapNhat)
-                .addGap(44, 44, 44))
-            .addComponent(jScrollPane3)
+                .addGap(44, 573, Short.MAX_VALUE))
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 705, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(btnThemSanPham)
-                    .addComponent(btnCapNhat))
-                .addGap(28, 28, 28)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnTimKiem)
-                    .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, 0)
+                .addComponent(jLabel3)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnTimKiem)
+                            .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnThemSanPham)
+                            .addComponent(btnCapNhat))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE))
         );
 
@@ -884,7 +895,7 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
             DefaultTableModel model = (DefaultTableModel) tblSanPham.getModel();
             model.setRowCount(0);
             model.addRow(new Object[]{
-                sp.getIdSp(),
+                sp.getIdSanPham(),
                 sp.getTenSp(),
                 sp.getTenDanhMuc(),
                 sp.getTenMauSac(),
@@ -962,7 +973,7 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
         // 🛑 KIỂM TRA TRẠNG THÁI SẢN PHẨM
         if ("Ngừng bán".equalsIgnoreCase(sp.getTrangThai())) {
             JOptionPane.showMessageDialog(this,
-                    "❌ Sản phẩm '" + sp.getTenSp()+ "' đã ngừng bán, không thể thêm vào hóa đơn!");
+                    "❌ Sản phẩm '" + sp.getTenSp() + "' đã ngừng bán, không thể thêm vào hóa đơn!");
             return;
         }
 
@@ -1076,7 +1087,6 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
             }
 
             // Reset tiền thối và chọn phương thức thanh toán
-
             jComboBox1.setSelectedIndex(0);
 
             // Load chi tiết hóa đơn lên JTable
@@ -1181,29 +1191,29 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
 
     private void btnThanhToanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThanhToanActionPerformed
         if (idHoaDonDangChon == -1) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn hóa đơn trước!");
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn hóa đơn trước!", "Thông báo", JOptionPane.PLAIN_MESSAGE);
             return;
         }
 
         if (!daXacNhan) {
-            JOptionPane.showMessageDialog(this, "Hóa đơn chưa được xác nhận, không thể thanh toán!");
+            JOptionPane.showMessageDialog(this, "Hóa đơn chưa được xác nhận, không thể thanh toán!", "Thông báo", JOptionPane.PLAIN_MESSAGE);
             return;
         }
 
         HoaDonEntity hd = hoaDonDAO.getById(idHoaDonDangChon);
         if (hd == null) {
-            JOptionPane.showMessageDialog(this, "Hóa đơn không tồn tại!");
+            JOptionPane.showMessageDialog(this, "Hóa đơn không tồn tại!", "Thông báo", JOptionPane.PLAIN_MESSAGE);
             return;
         }
 
         if (txtTenKhachHang.getText().equals("Chưa chọn") || txtTenKhachHang.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn khách hàng trước khi thanh toán!");
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn khách hàng trước khi thanh toán!", "Thông báo", JOptionPane.PLAIN_MESSAGE);
             return;
         }
 
         KhachHangEntity kh = khachHangDAO.findByName(txtTenKhachHang.getText());
         if (kh == null) {
-            JOptionPane.showMessageDialog(this, "Không tìm thấy khách hàng!");
+            JOptionPane.showMessageDialog(this, "Không tìm thấy khách hàng!", "Thông báo", JOptionPane.PLAIN_MESSAGE);
             return;
         }
 
@@ -1212,7 +1222,7 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
 
         List<ChiTietHoaDonEntity> listCT = chiTietHoaDonDAO.getByIdHoaDon(idHoaDonDangChon);
         if (listCT.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Hóa đơn chưa có sản phẩm!");
+            JOptionPane.showMessageDialog(this, "Hóa đơn chưa có sản phẩm!", "Thông báo", JOptionPane.PLAIN_MESSAGE);
             return;
         }
 
@@ -1225,33 +1235,33 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
         txtSoLuong.setText(String.valueOf(tongSoLuong));
         txtTongTien.setText(String.valueOf(tongTien));
 
-        // Nhập tiền khách đưa
         double tienKhachDua = 0;
         if (hoaDonTam.containsKey(idHoaDonDangChon)) {
             tienKhachDua = hoaDonTam.get(idHoaDonDangChon).getTienKhachDua();
         }
 
         String strTien = JOptionPane.showInputDialog(this,
-                "Tổng tiền: " + tongTien + " VNĐ\nNhập tiền khách đưa:",
+                "Tổng tiền: " + formatMoney(tongTien) + " VNĐ\nNhập tiền khách đưa:",
                 tienKhachDua > 0 ? tienKhachDua : "");
         if (strTien == null) {
             return;
         }
+
         try {
             tienKhachDua = Double.parseDouble(strTien);
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Tiền khách đưa không hợp lệ!");
+            JOptionPane.showMessageDialog(this, "Tiền khách đưa không hợp lệ!", "Thông báo", JOptionPane.PLAIN_MESSAGE);
             return;
         }
 
         if (tienKhachDua < tongTien) {
-            JOptionPane.showMessageDialog(this, "Tiền khách đưa không đủ!");
+            JOptionPane.showMessageDialog(this, "Tiền khách đưa không đủ!", "Thông báo", JOptionPane.PLAIN_MESSAGE);
             return;
         }
 
         double tienThoi = tienKhachDua - tongTien;
 
-        // Lưu tiền khách đưa vào HashMap
+        // Lưu tạm thông tin
         ThongTinTamHoaDon thongTinTam = new ThongTinTamHoaDon(
                 txtTenKhachHang.getText(),
                 txtSoDienThoai.getText(),
@@ -1274,24 +1284,26 @@ public class QuanLyChiTietHoaDonJPanel extends javax.swing.JPanel {
             sanPhamDAO.update2(sp);
         }
 
+        // Thông báo kết quả KHÔNG ICON
         JOptionPane.showMessageDialog(this,
-                "✅ Thanh toán thành công!\n"
-                + "Tổng tiền: " + tongTien + " VNĐ\n"
-                + "Tiền khách đưa: " + tienKhachDua + " VNĐ\n"
-                + "Tiền thối lại: " + tienThoi + " VNĐ");
+                "Thanh toán thành công!\n"
+                + "Tổng tiền: " + formatMoney(tongTien) + " VNĐ\n"
+                + "Tiền khách đưa: " + formatMoney(tienKhachDua) + " VNĐ\n"
+                + "Tiền thối lại: " + formatMoney(tienThoi) + " VNĐ",
+                "Thông báo", JOptionPane.PLAIN_MESSAGE);
 
         // Reset form
         txtTenKhachHang.setText("Chưa chọn");
         txtSoDienThoai.setText("");
         txtSoLuong.setText("");
         txtTongTien.setText("");
-//        txtTienKhachDua.setText("");
-//        txtTienHoanLai.setText("");
         jComboBox1.setSelectedIndex(0);
 
+        // Gọi fill lại bảng
         fillTableChiTietHoaDon();
         fillTableSanPham();
         fillTableHoaDonCho();
+        fillTableKhachHang(); // load lại khách hàng
 
         hoaDonTam.remove(idHoaDonDangChon);
         idHoaDonDangChon = -1;

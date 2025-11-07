@@ -73,7 +73,7 @@ public class ThongKeJPanel extends javax.swing.JPanel {
 
             lblDoanhThuHomNay.setText(String.format("%,.0f VND", doanhThuHomNay));
 
-            lblDoanhThuTrongKhoang.setText("0 VND"); // Mặc định khi chưa lọc
+//            lblDoanhThuTrongKhoang.setText("0 VND"); // Mặc định khi chưa lọc
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -120,7 +120,7 @@ public class ThongKeJPanel extends javax.swing.JPanel {
             // --- Cập nhật hiển thị ---
             lblTongDoanhThu.setText("Tổng doanh thu: " + String.format("%,.0f VND", tongDoanhThu));
             lblDoanhThuHomNay.setText("Doanh thu hôm nay: " + String.format("%,.0f VND", doanhThuHomNay));
-            lblDoanhThuTrongKhoang.setText("Doanh thu trong khoảng: 0 VND");
+//            lblDoanhThuTrongKhoang.setText("Doanh thu trong khoảng: 0 VND");
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Lỗi thống kê doanh thu: " + e.getMessage());
@@ -202,9 +202,10 @@ public class ThongKeJPanel extends javax.swing.JPanel {
 
         jPanel2.setBackground(new java.awt.Color(0, 153, 153));
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel3.setText("Tổng doanh thu");
 
+        lblTongDoanhThu.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         lblTongDoanhThu.setText("jLabel4");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -230,9 +231,10 @@ public class ThongKeJPanel extends javax.swing.JPanel {
 
         jPanel3.setBackground(new java.awt.Color(255, 102, 102));
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel5.setText("Doanh thu hôm nay");
 
+        lblDoanhThuHomNay.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         lblDoanhThuHomNay.setText("jLabel7");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -260,10 +262,11 @@ public class ThongKeJPanel extends javax.swing.JPanel {
 
         jPanel4.setBackground(new java.awt.Color(102, 102, 102));
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel6.setText("Doanh thu trong khoảng lọc");
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel6.setText("Doanh thu trong khoảng ngày");
 
-        lblDoanhThuTrongKhoang.setText("jLabel8");
+        lblDoanhThuTrongKhoang.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lblDoanhThuTrongKhoang.setText("0 VNĐ");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -348,10 +351,7 @@ public class ThongKeJPanel extends javax.swing.JPanel {
                         .addGap(31, 31, 31)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1020, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jScrollPane1)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -417,7 +417,7 @@ public class ThongKeJPanel extends javax.swing.JPanel {
                     .sum();
 
             lblDoanhThuTrongKhoang.setText(String.format("%,.0f VND", doanhThuKhoang));
-            
+
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Lỗi khi lọc dữ liệu: " + ex.getMessage());
         }
@@ -428,12 +428,19 @@ public class ThongKeJPanel extends javax.swing.JPanel {
     private void locNhanh() {
         try {
             String selected = (String) jComboBox1.getSelectedItem();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
             if ("Tất cả".equals(selected)) {
                 List<HoaDonEntity> all = hoaDonDAO.getHoaDonTK().stream()
                         .filter(hd -> "Đã thanh toán".equalsIgnoreCase(hd.getTrangThai().trim()))
                         .collect(Collectors.toList());
                 fillTable(all);
-                lblDoanhThuTrongKhoang.setText("0 VND");
+
+                double doanhThuTatCa = all.stream()
+                        .mapToDouble(HoaDonEntity::getTongTien)
+                        .sum();
+
+                lblDoanhThuTrongKhoang.setText(String.format("%,.0f VND", doanhThuTatCa));
                 return;
             }
 
@@ -453,7 +460,6 @@ public class ThongKeJPanel extends javax.swing.JPanel {
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.DAY_OF_YEAR, -(int) days);
             Date tuNgay = cal.getTime();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
             List<HoaDonEntity> filtered = new ArrayList<>();
             for (HoaDonEntity hd : hoaDonDAO.getHoaDonTK()) {
@@ -470,13 +476,10 @@ public class ThongKeJPanel extends javax.swing.JPanel {
                     .sum();
 
             lblDoanhThuTrongKhoang.setText(String.format("%,.0f VND", doanhThuKhoang));
-            
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Lỗi khi lọc nhanh: " + ex.getMessage());
-        }
 
-        // --- Không cần sửa phần initComponents --- //
-        // (giữ nguyên như bạn có sẵn)
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Lỗi khi lọc nhanh: " + ex.getMessage(), "Thông báo", JOptionPane.PLAIN_MESSAGE);
+        }
 
     }//GEN-LAST:event_btnLocActionPerformed
 

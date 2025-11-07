@@ -81,4 +81,23 @@ public class MauSacDAO {
         }
         return -1; // không tìm thấy
     }
+
+    public MauSacEntity findByName(String tenMau) {
+        String sql = "SELECT * FROM MauSac WHERE ten_mau_sac = ?";
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, tenMau);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    MauSacEntity ms = new MauSacEntity();
+                    ms.setIdMauSac(rs.getInt("id_mau_sac"));
+                    ms.setTenMauSac(rs.getString("ten_mau_sac"));
+                    return ms;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi findByName MauSac: " + e.getMessage());
+        }
+        return null; // Không tìm thấy
+    }
 }

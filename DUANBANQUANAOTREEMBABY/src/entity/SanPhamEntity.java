@@ -1,6 +1,7 @@
 package entity;
 
 public class SanPhamEntity {
+
     private int idSanPham;
     private String tenSp;
     private double gia;
@@ -10,7 +11,7 @@ public class SanPhamEntity {
     private int idMauSac;
     private int idKichThuoc;
 
-    // 🔹 Thêm 3 trường mới để hiển thị JOIN
+    // 🔹 Trường hiển thị JOIN
     private String tenDanhMuc;
     private String tenMauSac;
     private String tenKichThuoc;
@@ -18,18 +19,9 @@ public class SanPhamEntity {
     public SanPhamEntity() {
     }
 
-    public SanPhamEntity(int idSanPham, String tenSp, double gia, int soLuong, int idDanhMuc, String trangThai, int idMauSac, int idKichThuoc) {
-        this.idSanPham = idSanPham;
-        this.tenSp = tenSp;
-        this.gia = gia;
-        this.soLuong = soLuong;
-        this.idDanhMuc = idDanhMuc;
-        this.trangThai = trangThai;
-        this.idMauSac = idMauSac;
-        this.idKichThuoc = idKichThuoc;
-    }
-
-    public SanPhamEntity(int idSanPham, String tenSp, double gia, int soLuong, int idDanhMuc, int idMauSac, int idKichThuoc, String tenDanhMuc, String tenMauSac, String tenKichThuoc) {
+    // Constructor đầy đủ cho hiển thị JOIN
+    public SanPhamEntity(int idSanPham, String tenSp, double gia, int soLuong, int idDanhMuc,
+            int idMauSac, int idKichThuoc, String tenDanhMuc, String tenMauSac, String tenKichThuoc, String trangThai) {
         this.idSanPham = idSanPham;
         this.tenSp = tenSp;
         this.gia = gia;
@@ -40,26 +32,27 @@ public class SanPhamEntity {
         this.tenDanhMuc = tenDanhMuc;
         this.tenMauSac = tenMauSac;
         this.tenKichThuoc = tenKichThuoc;
+        this.trangThai = trangThai;
     }
-    
 
-    public SanPhamEntity(String tenSp, double gia, int soLuong, int idDanhMuc, String trangThai, int idMauSac, int idKichThuoc) {
+    // Constructor cho insert/update (không cần tên hiển thị)
+    public SanPhamEntity(String tenSp, double gia, int soLuong, int idDanhMuc, int idMauSac, int idKichThuoc, String trangThai) {
         this.tenSp = tenSp;
         this.gia = gia;
         this.soLuong = soLuong;
         this.idDanhMuc = idDanhMuc;
-        this.trangThai = trangThai;
         this.idMauSac = idMauSac;
         this.idKichThuoc = idKichThuoc;
+        this.trangThai = trangThai;
     }
 
     // --- Getter & Setter ---
-    public int getIdSp() {
+    public int getIdSanPham() {
         return idSanPham;
     }
 
-    public void setIdSp(int idSp) {
-        this.idSanPham = idSp;
+    public void setIdSanPham(int idSanPham) {
+        this.idSanPham = idSanPham;
     }
 
     public String getTenSp() {
@@ -118,7 +111,6 @@ public class SanPhamEntity {
         this.idKichThuoc = idKichThuoc;
     }
 
-    // --- Getter & Setter cho 3 trường mới ---
     public String getTenDanhMuc() {
         return tenDanhMuc;
     }

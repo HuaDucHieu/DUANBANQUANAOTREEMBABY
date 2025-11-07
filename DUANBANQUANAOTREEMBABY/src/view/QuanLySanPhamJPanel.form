@@ -306,7 +306,7 @@
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="3">
-                <StringItem index="0" value="C&#xf2;n b&#xe1;n"/>
+                <StringItem index="0" value="C&#xf2;n h&#xe0;ng"/>
                 <StringItem index="1" value="Ng&#x1eeb;ng b&#xe1;n"/>
                 <StringItem index="2" value=" "/>
               </StringArray>
@@ -349,7 +349,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
-            <Property name="text" type="java.lang.String" value="ID m&#xe0;u s&#x1eaf;c"/>
+            <Property name="text" type="java.lang.String" value=" m&#xe0;u s&#x1eaf;c"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="cbMauSac">

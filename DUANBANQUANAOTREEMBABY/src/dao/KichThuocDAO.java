@@ -81,4 +81,23 @@ public class KichThuocDAO {
         }
         return -1; // không tìm thấy
     }
+
+    public KichThuocEntity findByName(String tenKT) {
+        String sql = "SELECT * FROM KichThuoc WHERE ten_kich_thuoc = ?";
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, tenKT);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    KichThuocEntity kt = new KichThuocEntity();
+                    kt.setIdKichThuoc(rs.getInt("id_kich_thuoc"));
+                    kt.setTenKichThuoc(rs.getString("ten_kich_thuoc"));
+                    return kt;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi findByName KichThuoc: " + e.getMessage());
+        }
+        return null; // Không tìm thấy
+    }
 }

@@ -11,6 +11,7 @@ import dao.SanPhamDAO;
 import entity.SanPhamEntity;
 import java.text.DecimalFormat;
 import java.util.List;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import utils.ConnectDB;
@@ -42,13 +43,13 @@ public class QuanLySanPhamJPanel extends javax.swing.JPanel {
         model.setRowCount(0);
         for (SanPhamEntity sp : sanPhamDao.getAll()) {
             Object[] row = {
-                sp.getIdSp(),
+                sp.getIdSanPham(),
                 sp.getTenSp(),
                 sp.getGia(),
                 sp.getSoLuong(),
-                sp.getIdDanhMuc(),
-                sp.getIdMauSac(),
-                sp.getIdKichThuoc(),
+                sp.getTenDanhMuc(),
+                sp.getTenMauSac(),
+                sp.getTenKichThuoc(),
                 sp.getTrangThai()
             };
             model.addRow(row);
@@ -60,38 +61,49 @@ public class QuanLySanPhamJPanel extends javax.swing.JPanel {
             String tenSP = txtTenSP.getText().trim();
             String giaStr = txtGia.getText().trim();
             String soLuongStr = txtSoLuong.getText().trim();
-            String idDanhMucStr = txtDanhMuc.getText().trim();
-            int idMauSacStr = cbMauSac.getSelectedIndex() + 1;
-            int idKichThuocStr = cbKichThuoc.getSelectedIndex() + 1;
 
-            if (tenSP.isEmpty() || giaStr.isEmpty() || soLuongStr.isEmpty() || idDanhMucStr.isEmpty()) {
+            if (tenSP.isEmpty() || giaStr.isEmpty() || soLuongStr.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!");
                 return null;
             }
 
             double gia = Double.parseDouble(giaStr);
             int soLuong = Integer.parseInt(soLuongStr);
-            int idDanhMuc = Integer.parseInt(idDanhMucStr);
 
+            // --- Lấy các giá trị từ combo box ---
+            String tenDanhMuc = txtDanhMuc.getText().trim();
+            String tenMauSac = cbMauSac.getSelectedItem().toString();
+            String tenKichThuoc = cbKichThuoc.getSelectedItem().toString();
+            String trangThai = cbTrangThai.getSelectedItem().toString(); // giữ trạng thái thủ công
+
+            // --- Tạo entity ---
             SanPhamEntity sp = new SanPhamEntity();
             sp.setTenSp(tenSP);
             sp.setGia(gia);
             sp.setSoLuong(soLuong);
-            sp.setIdDanhMuc(idDanhMuc);
-            sp.setIdMauSac(idMauSacStr);
-            sp.setIdKichThuoc(idKichThuocStr);
+            sp.setTenDanhMuc(tenDanhMuc);
+            sp.setTenMauSac(tenMauSac);
+            sp.setTenKichThuoc(tenKichThuoc);
+            sp.setTrangThai(trangThai);
 
-            // **Tự động cập nhật trạng thái dựa trên số lượng**
-            if (soLuong == 0) {
-                sp.setTrangThai("Ngừng bán");
-            } else {
-                sp.setTrangThai("Còn bán");
+            // --- Chuyển tên thành id để lưu database ---
+            if (!tenDanhMuc.isEmpty()) {
+                sp.setIdDanhMuc(danhMucDAO.findByName(tenDanhMuc).getIdDanhMuc());
+            }
+            if (!tenMauSac.isEmpty()) {
+                sp.setIdMauSac(mauSacDAO.findByName(tenMauSac).getIdMauSac());
+            }
+            if (!tenKichThuoc.isEmpty()) {
+                sp.setIdKichThuoc(kichThuocDAO.findByName(tenKichThuoc).getIdKichThuoc());
             }
 
             return sp;
 
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Giá và số lượng phải là số!");
+            return null;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Lỗi: " + e.getMessage());
             return null;
         }
     }
@@ -118,6 +130,16 @@ public class QuanLySanPhamJPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Lỗi nhập dữ liệu: " + e.getMessage());
             return null;
         }
+    }
+
+    private void selectComboBoxItem(JComboBox<String> combo, String value) {
+        for (int i = 0; i < combo.getItemCount(); i++) {
+            if (combo.getItemAt(i).trim().equalsIgnoreCase(value.trim())) {
+                combo.setSelectedIndex(i);
+                return;
+            }
+        }
+        combo.setSelectedIndex(-1); // Nếu không tìm thấy
     }
 
     private void clearForm() {
@@ -237,7 +259,7 @@ public class QuanLySanPhamJPanel extends javax.swing.JPanel {
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel7.setText("Sản phẩm");
 
-        cbTrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Còn bán", "Ngừng bán", " " }));
+        cbTrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Còn hàng", "Ngừng bán", " " }));
 
         btnCapNhat.setText("Cập nhật");
         btnCapNhat.addActionListener(new java.awt.event.ActionListener() {
@@ -267,7 +289,7 @@ public class QuanLySanPhamJPanel extends javax.swing.JPanel {
 
         jLabel1.setText("Danh mục");
 
-        jLabel6.setText("ID màu sắc");
+        jLabel6.setText(" màu sắc");
 
         cbMauSac.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Đỏ", "Xanh dương", "Xanh lá cây", "Vàng", "Cam", "Tím", "Hồng", "Trắng", "Đen", "Xám", "Nâu", "Be", "Bạc", "Vàng đồng", "Xanh ngọc", "Xanh navy", "Xanh pastel", "Đỏ đô", "Hồng phấn", "Tím than", "Kem", "Xanh lam", "Xanh bạc hà", "Cam đất", "Xanh oliu" }));
 
@@ -410,6 +432,18 @@ public class QuanLySanPhamJPanel extends javax.swing.JPanel {
         if (sp == null) {
             return;
         }
+
+        // Lấy ID từ tên danh mục, màu sắc, kích thước
+        if (sp.getTenDanhMuc() != null) {
+            sp.setIdDanhMuc(danhMucDAO.findByName(sp.getTenDanhMuc()).getIdDanhMuc());
+        }
+        if (sp.getTenMauSac() != null) {
+            sp.setIdMauSac(mauSacDAO.findByName(sp.getTenMauSac()).getIdMauSac());
+        }
+        if (sp.getTenKichThuoc() != null) {
+            sp.setIdKichThuoc(kichThuocDAO.findByName(sp.getTenKichThuoc()).getIdKichThuoc());
+        }
+
         sanPhamDao.insert(sp);
         fillTable();
         clearForm();
@@ -427,10 +461,17 @@ public class QuanLySanPhamJPanel extends javax.swing.JPanel {
         if (sp == null) {
             return;
         }
-        sp.setIdSp((int) tblSanPham.getValueAt(row, 0));
+
+        sp.setIdSanPham((int) tblSanPham.getValueAt(row, 0));
+
+        // Lấy ID từ tên danh mục, màu sắc, kích thước
+        sp.setIdDanhMuc(danhMucDAO.findByName(sp.getTenDanhMuc()).getIdDanhMuc());
+        sp.setIdMauSac(mauSacDAO.findByName(sp.getTenMauSac()).getIdMauSac());
+        sp.setIdKichThuoc(kichThuocDAO.findByName(sp.getTenKichThuoc()).getIdKichThuoc());
+
         sanPhamDao.update(sp);
         fillTable();
-        JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
+        JOptionPane.showMessageDialog(this, "Sửa thành công!");
     }//GEN-LAST:event_btnSuaActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
@@ -495,7 +536,7 @@ public class QuanLySanPhamJPanel extends javax.swing.JPanel {
 
             for (SanPhamEntity sp : list) {
                 Object[] row = {
-                    sp.getIdSp(),
+                    sp.getIdSanPham(),
                     sp.getTenSp(),
                     df.format(sp.getGia()), // định dạng giá tiền
                     sp.getSoLuong(),
@@ -519,7 +560,6 @@ public class QuanLySanPhamJPanel extends javax.swing.JPanel {
             return;
         }
 
-        // Lấy dữ liệu từ bảng
         txtTenSP.setText(tblSanPham.getValueAt(row, 1).toString());
         txtGia.setText(tblSanPham.getValueAt(row, 2).toString());
         txtSoLuong.setText(tblSanPham.getValueAt(row, 3).toString());
@@ -527,9 +567,9 @@ public class QuanLySanPhamJPanel extends javax.swing.JPanel {
         cbMauSac.setSelectedItem(tblSanPham.getValueAt(row, 5).toString());
         cbKichThuoc.setSelectedItem(tblSanPham.getValueAt(row, 6).toString());
 
-        // Cập nhật combo trạng thái
+        // Set trạng thái trực tiếp từ JTable
         String trangThai = tblSanPham.getValueAt(row, 7).toString();
-        cbTrangThai.setSelectedItem(trangThai.contains("Còn") ? "Còn bán" : "Ngừng bán");
+        cbTrangThai.setSelectedItem(trangThai); // "Còn hàng" hoặc "Ngừng bán"
     }//GEN-LAST:event_tblSanPhamMouseClicked
 
 

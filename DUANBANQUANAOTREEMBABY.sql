@@ -136,6 +136,11 @@ CREATE TABLE SanPham (
     FOREIGN KEY (id_kich_thuoc) REFERENCES KichThuoc(id_kich_thuoc)
 );
 
+ALTER TABLE SanPham
+ADD ten_danh_muc NVARCHAR(100),
+    ten_mau_sac NVARCHAR(50),
+    ten_kich_thuoc NVARCHAR(50);
+
 INSERT INTO SanPham (ten_sp, gia, so_luong, id_danh_muc, trang_thai, id_mau_sac, id_kich_thuoc)
 VALUES
 (N'Áo thun bé trai siêu nhân', 120000, 50, 1, N'Còn hàng', 1, 2),
@@ -155,6 +160,7 @@ VALUES
 (N'Bình sữa an toàn', 300000, 40, 9, N'Còn hàng', 9, 1),
 (N'Đồ chơi lego bé trai', 450000, 15, 3, N'Còn hàng', 10, 2);
 Select * from SanPham
+Drop Table SanPham
 -- ============================================
 -- BẢNG HÓA ĐƠN
 -- ============================================
