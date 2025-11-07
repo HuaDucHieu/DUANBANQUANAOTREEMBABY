@@ -8,6 +8,7 @@ package view;
 import java.awt.BorderLayout;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import loginview.LoginJFrame;
 import view.QuanLyChiTietHoaDonJPanel;
 import view.QuanLyDanhMucJPanel;
 import view.QuanLyHoaDonJPanel;
@@ -64,6 +65,7 @@ public class HomeJFrame extends javax.swing.JFrame {
         mainPanel.setBackground(new java.awt.Color(255, 153, 204));
         mainPanel.setLayout(new java.awt.BorderLayout());
 
+        jLabel1.setBackground(new java.awt.Color(255, 153, 153));
         jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Shop quần áo trẻ em baby");

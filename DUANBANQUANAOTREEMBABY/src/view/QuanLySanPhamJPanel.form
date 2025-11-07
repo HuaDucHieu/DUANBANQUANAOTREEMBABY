@@ -29,7 +29,7 @@
     <Container class="javax.swing.JPanel" name="jPanel1">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="cc" green="99" red="ff" type="rgb"/>
+          <Color blue="99" green="99" red="ff" type="rgb"/>
         </Property>
       </Properties>
 
@@ -205,9 +205,9 @@
                     <Column editable="false" title="Gi&#xe1;" type="java.lang.Object"/>
                     <Column editable="false" title="S&#x1ed1; l&#x1b0;&#x1ee3;ng" type="java.lang.Object"/>
                     <Column editable="false" title="Danh m&#x1ee5;c" type="java.lang.Object"/>
-                    <Column editable="false" title="Tr&#x1ea1;ng th&#xe1;i" type="java.lang.Object"/>
                     <Column editable="false" title="M&#xe0;u s&#x1eaf;c" type="java.lang.Object"/>
                     <Column editable="false" title="K&#xed;ch th&#x1b0;&#x1edb;c" type="java.lang.Object"/>
+                    <Column editable="false" title="Tr&#x1ea1;ng th&#xe1;i" type="java.lang.Object"/>
                   </Table>
                 </Property>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -396,19 +396,23 @@
         <Component class="javax.swing.JComboBox" name="cbKichThuoc">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="12">
-                <StringItem index="0" value="XS"/>
-                <StringItem index="1" value="S"/>
-                <StringItem index="2" value="M"/>
-                <StringItem index="3" value="L"/>
-                <StringItem index="4" value="XL"/>
-                <StringItem index="5" value="XXL"/>
-                <StringItem index="6" value="3XL"/>
-                <StringItem index="7" value="4XL"/>
-                <StringItem index="8" value="5XL"/>
-                <StringItem index="9" value="6XL"/>
-                <StringItem index="10" value="7XL"/>
-                <StringItem index="11" value=" "/>
+              <StringArray count="16">
+                <StringItem index="0" value="S  "/>
+                <StringItem index="1" value="M  "/>
+                <StringItem index="2" value="L  "/>
+                <StringItem index="3" value="XL  "/>
+                <StringItem index="4" value="XXL  "/>
+                <StringItem index="5" value="3T  "/>
+                <StringItem index="6" value="4T  "/>
+                <StringItem index="7" value="5T  "/>
+                <StringItem index="8" value="6T  "/>
+                <StringItem index="9" value="7T  "/>
+                <StringItem index="10" value="8T  "/>
+                <StringItem index="11" value="9T  "/>
+                <StringItem index="12" value="10T  "/>
+                <StringItem index="13" value="11T  "/>
+                <StringItem index="14" value="12T"/>
+                <StringItem index="15" value=" "/>
               </StringArray>
             </Property>
           </Properties>

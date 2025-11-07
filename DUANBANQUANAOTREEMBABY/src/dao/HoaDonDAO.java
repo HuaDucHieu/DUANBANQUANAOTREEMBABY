@@ -72,7 +72,7 @@ public class HoaDonDAO {
     public List<HoaDonEntity> getHoaDonCho() {
         List<HoaDonEntity> list = new ArrayList<>();
         String sql = "SELECT id_hoa_don, ngay_lap, trang_thai "
-                + "FROM HoaDon ";
+                + "FROM HoaDon WHERE trang_thai = N'Đang xử lý' ";
 
         try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
@@ -364,6 +364,48 @@ public class HoaDonDAO {
             ex.printStackTrace();
             return false;
         }
+    }
+    // Lấy hóa đơn hôm nay (đã thanh toán)
+
+    public List<HoaDonEntity> getHoaDonHomNay() {
+        List<HoaDonEntity> list = new ArrayList<>();
+        String sql = "SELECT * FROM HoaDon WHERE trang_thai = N'Đã thanh toán' AND CAST(ngay_lap AS DATE) = CAST(GETDATE() AS DATE)";
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                HoaDonEntity hd = new HoaDonEntity();
+                hd.setIdHoaDon(rs.getInt("id_hoa_don"));
+                hd.setNgayLap(rs.getString("ngay_lap"));
+                hd.setTongTien(rs.getDouble("tong_tien"));
+                hd.setTrangThai(rs.getString("trang_thai"));
+                // set thêm các trường khác nếu cần
+                list.add(hd);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+// Lấy tất cả hóa đơn đã thanh toán
+    public List<HoaDonEntity> getHoaDonDaThanhToan() {
+        List<HoaDonEntity> list = new ArrayList<>();
+        String sql = "SELECT * FROM HoaDon WHERE trang_thai = N'Đã thanh toán'";
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                HoaDonEntity hd = new HoaDonEntity();
+                hd.setIdHoaDon(rs.getInt("id_hoa_don"));
+                hd.setNgayLap(rs.getString("ngay_lap"));
+                hd.setTongTien(rs.getDouble("tong_tien"));
+                hd.setTrangThai(rs.getString("trang_thai"));
+                // set thêm các trường khác nếu cần
+                list.add(hd);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
 }

@@ -114,7 +114,7 @@ public class QuanLyKhachHangJPanel extends javax.swing.JPanel {
         btnXoa = new javax.swing.JButton();
         btnCapNhat = new javax.swing.JButton();
 
-        jPanel1.setBackground(new java.awt.Color(255, 153, 204));
+        jPanel1.setBackground(new java.awt.Color(255, 153, 153));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel1.setText("Khách hàng");

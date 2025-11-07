@@ -138,52 +138,6 @@ public class ChiTietHoaDonDAO {
 
     }
 
-    public List<ChiTietHoaDonEntity> getByIdHoaDon(int idHoaDon) {
-        List<ChiTietHoaDonEntity> list = new ArrayList<>();
-        String sql = """
-            SELECT 
-                cthd.id_chi_tiet_hoa_don,
-                cthd.id_hoa_don,
-                sp.id_sp,
-                sp.ten_sp,
-                dm.ten_danh_muc,
-                ms.ten_mau_sac,
-                kt.ten_kich_thuoc,
-                sp.gia,
-                cthd.so_luong
-            FROM ChiTietHoaDon cthd
-            JOIN SanPham sp ON cthd.id_sp = sp.id_sp
-            JOIN DanhMuc dm ON sp.id_danh_muc = dm.id_danh_muc
-            JOIN MauSac ms ON sp.id_mau_sac = ms.id_mau_sac
-            JOIN KichThuoc kt ON sp.id_kich_thuoc = kt.id_kich_thuoc
-            WHERE cthd.id_hoa_don = ?
-        """;
-
-        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setInt(1, idHoaDon);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                ChiTietHoaDonEntity cthd = new ChiTietHoaDonEntity(
-                        rs.getInt("id_chi_tiet_hoa_don"),
-                        rs.getInt("id_hoa_don"),
-                        rs.getInt("id_sp"),
-                        rs.getString("ten_sp"),
-                        rs.getString("ten_danh_muc"),
-                        rs.getString("ten_mau_sac"),
-                        rs.getString("ten_kich_thuoc"),
-                        rs.getInt("so_luong"),
-                        rs.getDouble("gia")
-                );
-                list.add(cthd);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
     public ChiTietHoaDonEntity findByHoaDonAndSanPham(int idHoaDon, int idSanPham) {
         String sql = "SELECT * FROM ChiTietHoaDon WHERE id_hoa_don = ? AND id_sp = ?";
         try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
@@ -269,6 +223,75 @@ public class ChiTietHoaDonDAO {
             e.printStackTrace();
         }
         return tong;
+    }
+
+//    public List<ChiTietHoaDonEntity> getByIdHoaDon2(int idHoaDon) {
+//        List<ChiTietHoaDonEntity> list = new ArrayList<>();
+//        String sql = "SELECT * FROM ChiTietHoaDon WHERE id_hoa_don = ?";
+//        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
+//            ps.setInt(1, idHoaDon);
+//            ResultSet rs = ps.executeQuery();
+//            while (rs.next()) {
+//                ChiTietHoaDonEntity ct = new ChiTietHoaDonEntity();
+//                ct.setIdChiTietHoaDon(rs.getInt("id_chi_tiet_hoa_don"));
+//                ct.setTenSanPham(rs.getString("ten_sp"));
+//                ct.setTenDanhMuc(rs.getString("ten_danh_muc"));
+//                ct.setTenMauSac(rs.getString("ten_mau_sac"));
+//                ct.setTenKichThuoc(rs.getString("ten_kich_thuoc"));
+//                ct.setSoLuong(rs.getInt("so_luong"));
+//                ct.setDonGia(rs.getDouble("don_gia"));
+//                list.add(ct);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return list;
+//    }
+
+    public List<ChiTietHoaDonEntity> getByIdHoaDon(int idHoaDon) {
+        List<ChiTietHoaDonEntity> list = new ArrayList<>();
+        String sql = """
+            SELECT 
+                cthd.id_chi_tiet_hoa_don,
+                cthd.id_hoa_don,
+                sp.id_sp,
+                sp.ten_sp,
+                dm.ten_danh_muc,
+                ms.ten_mau_sac,
+                kt.ten_kich_thuoc,
+                sp.gia,
+                cthd.so_luong
+            FROM ChiTietHoaDon cthd
+            JOIN SanPham sp ON cthd.id_sp = sp.id_sp
+            JOIN DanhMuc dm ON sp.id_danh_muc = dm.id_danh_muc
+            JOIN MauSac ms ON sp.id_mau_sac = ms.id_mau_sac
+            JOIN KichThuoc kt ON sp.id_kich_thuoc = kt.id_kich_thuoc
+            WHERE cthd.id_hoa_don = ?
+        """;
+
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, idHoaDon);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                ChiTietHoaDonEntity cthd = new ChiTietHoaDonEntity(
+                        rs.getInt("id_chi_tiet_hoa_don"),
+                        rs.getInt("id_hoa_don"),
+                        rs.getInt("id_sp"),
+                        rs.getString("ten_sp"),
+                        rs.getString("ten_danh_muc"),
+                        rs.getString("ten_mau_sac"),
+                        rs.getString("ten_kich_thuoc"),
+                        rs.getInt("so_luong"),
+                        rs.getDouble("gia")
+                );
+                list.add(cthd);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
 }

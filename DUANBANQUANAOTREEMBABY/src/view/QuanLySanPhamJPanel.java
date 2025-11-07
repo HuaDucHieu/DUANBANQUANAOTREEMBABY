@@ -4,6 +4,9 @@
  */
 package view;
 
+import dao.MauSacDAO;
+import dao.KichThuocDAO;
+import dao.DanhMucDAO;
 import dao.SanPhamDAO;
 import entity.SanPhamEntity;
 import java.text.DecimalFormat;
@@ -19,6 +22,9 @@ import utils.ConnectDB;
 public class QuanLySanPhamJPanel extends javax.swing.JPanel {
 
     SanPhamDAO sanPhamDao = new SanPhamDAO();
+    DanhMucDAO danhMucDAO = new DanhMucDAO();
+    MauSacDAO mauSacDAO = new MauSacDAO();
+    KichThuocDAO kichThuocDAO = new KichThuocDAO();
     DefaultTableModel model;
 
     /**
@@ -41,9 +47,9 @@ public class QuanLySanPhamJPanel extends javax.swing.JPanel {
                 sp.getGia(),
                 sp.getSoLuong(),
                 sp.getIdDanhMuc(),
-                sp.getTrangThai(),
                 sp.getIdMauSac(),
-                sp.getIdKichThuoc()
+                sp.getIdKichThuoc(),
+                sp.getTrangThai()
             };
             model.addRow(row);
         }
@@ -55,9 +61,8 @@ public class QuanLySanPhamJPanel extends javax.swing.JPanel {
             String giaStr = txtGia.getText().trim();
             String soLuongStr = txtSoLuong.getText().trim();
             String idDanhMucStr = txtDanhMuc.getText().trim();
-            String trangThai = cbTrangThai.getSelectedItem().toString();
-            int idMauSac = cbMauSac.getSelectedIndex() + 1;
-            int idKichThuoc = cbKichThuoc.getSelectedIndex() + 1;
+            int idMauSacStr = cbMauSac.getSelectedIndex() + 1;
+            int idKichThuocStr = cbKichThuoc.getSelectedIndex() + 1;
 
             if (tenSP.isEmpty() || giaStr.isEmpty() || soLuongStr.isEmpty() || idDanhMucStr.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!");
@@ -73,11 +78,18 @@ public class QuanLySanPhamJPanel extends javax.swing.JPanel {
             sp.setGia(gia);
             sp.setSoLuong(soLuong);
             sp.setIdDanhMuc(idDanhMuc);
-            sp.setTrangThai(trangThai);
-            sp.setIdMauSac(idMauSac);
-            sp.setIdKichThuoc(idKichThuoc);
+            sp.setIdMauSac(idMauSacStr);
+            sp.setIdKichThuoc(idKichThuocStr);
+
+            // **Tự động cập nhật trạng thái dựa trên số lượng**
+            if (soLuong == 0) {
+                sp.setTrangThai("Ngừng bán");
+            } else {
+                sp.setTrangThai("Còn bán");
+            }
 
             return sp;
+
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Giá và số lượng phải là số!");
             return null;
@@ -153,7 +165,7 @@ public class QuanLySanPhamJPanel extends javax.swing.JPanel {
         jLabel8 = new javax.swing.JLabel();
         cbKichThuoc = new javax.swing.JComboBox<>();
 
-        jPanel1.setBackground(new java.awt.Color(255, 153, 204));
+        jPanel1.setBackground(new java.awt.Color(255, 153, 153));
 
         BtnThem.setText("Thêm");
         BtnThem.addActionListener(new java.awt.event.ActionListener() {
@@ -185,7 +197,7 @@ public class QuanLySanPhamJPanel extends javax.swing.JPanel {
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID Sản phẩm", "Tên SP", "Giá", "Số lượng", "Danh mục", "Trạng thái", "Màu sắc", "Kích thước"
+                "ID Sản phẩm", "Tên SP", "Giá", "Số lượng", "Danh mục", "Màu sắc", "Kích thước", "Trạng thái"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -261,7 +273,7 @@ public class QuanLySanPhamJPanel extends javax.swing.JPanel {
 
         jLabel8.setText("Kích thước");
 
-        cbKichThuoc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL", "5XL", "6XL", "7XL", " " }));
+        cbKichThuoc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "S  ", "M  ", "L  ", "XL  ", "XXL  ", "3T  ", "4T  ", "5T  ", "6T  ", "7T  ", "8T  ", "9T  ", "10T  ", "11T  ", "12T", " " }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -502,20 +514,22 @@ public class QuanLySanPhamJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnTimKiemActionPerformed
 
     private void tblSanPhamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSanPhamMouseClicked
-        // TODO add your handling code here:
-        // TODO add your handling code here:
         int row = tblSanPham.getSelectedRow();
         if (row < 0) {
             return;
         }
 
+        // Lấy dữ liệu từ bảng
         txtTenSP.setText(tblSanPham.getValueAt(row, 1).toString());
         txtGia.setText(tblSanPham.getValueAt(row, 2).toString());
         txtSoLuong.setText(tblSanPham.getValueAt(row, 3).toString());
         txtDanhMuc.setText(tblSanPham.getValueAt(row, 4).toString());
-        cbTrangThai.setSelectedItem(tblSanPham.getValueAt(row, 5).toString());
-        cbMauSac.setSelectedItem(tblSanPham.getValueAt(row, 6).toString());
-        cbKichThuoc.setSelectedItem(tblSanPham.getValueAt(row, 7).toString());
+        cbMauSac.setSelectedItem(tblSanPham.getValueAt(row, 5).toString());
+        cbKichThuoc.setSelectedItem(tblSanPham.getValueAt(row, 6).toString());
+
+        // Cập nhật combo trạng thái
+        String trangThai = tblSanPham.getValueAt(row, 7).toString();
+        cbTrangThai.setSelectedItem(trangThai.contains("Còn") ? "Còn bán" : "Ngừng bán");
     }//GEN-LAST:event_tblSanPhamMouseClicked
 
 

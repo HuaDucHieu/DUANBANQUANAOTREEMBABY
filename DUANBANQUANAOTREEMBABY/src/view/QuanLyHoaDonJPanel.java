@@ -52,19 +52,49 @@ public class QuanLyHoaDonJPanel extends javax.swing.JPanel {
 
     private void fillTableChiTietHoaDon() {
         DefaultTableModel model = (DefaultTableModel) tblChiTietHoaDon.getModel();
-        model.setRowCount(0);
+        model.setRowCount(0); // Xóa dữ liệu cũ
 
-        // Lấy danh sách chi tiết hóa đơn theo id hóa đơn đang chọn
+        // Lấy toàn bộ danh sách chi tiết hóa đơn từ DAO
         List<ChiTietHoaDonEntity> list = chiTietHoaDonDAO.getAll();
 
-        // Tạo DecimalFormat để format số
+        // Dùng DecimalFormat để hiển thị tiền tệ có dấu phẩy
         DecimalFormat df = new DecimalFormat("#,###");
 
         for (ChiTietHoaDonEntity ct : list) {
+            // Tính thành tiền
             double thanhTien = ct.getSoLuong() * ct.getDonGia();
 
+            // Format số
             String donGiaStr = df.format(ct.getDonGia());
-            String thanhTienStr = df.format(ct.getThanhTien()); // dùng getThanhTien() mới
+            String thanhTienStr = df.format(thanhTien);
+
+            // Thêm vào bảng
+            model.addRow(new Object[]{
+                ct.getIdChiTietHoaDon(),
+                ct.getTenSanPham(),
+                ct.getTenDanhMuc(),
+                ct.getTenMauSac(),
+                ct.getTenKichThuoc(),
+                ct.getSoLuong(),
+                donGiaStr,
+                thanhTienStr
+            });
+        }
+    }
+
+    private void fillTableChiTietHoaDon(int idHoaDon) {
+        DefaultTableModel model = (DefaultTableModel) tblChiTietHoaDon.getModel();
+        model.setRowCount(0); // xóa dữ liệu cũ
+
+        // Lấy danh sách chi tiết hóa đơn theo idHoaDon
+        List<ChiTietHoaDonEntity> list = chiTietHoaDonDAO.getByIdHoaDon(idHoaDon);
+
+        DecimalFormat df = new DecimalFormat("#,###");
+
+        for (ChiTietHoaDonEntity ct : list) {
+            double thanhTien = ct.getSoLuong() * ct.getDonGia(); // tính tại đây
+            String donGiaStr = df.format(ct.getDonGia());
+            String thanhTienStr = df.format(thanhTien);
 
             model.addRow(new Object[]{
                 ct.getIdChiTietHoaDon(),
@@ -134,7 +164,7 @@ public class QuanLyHoaDonJPanel extends javax.swing.JPanel {
 
         label1.setText("label1");
 
-        jPanel1.setBackground(new java.awt.Color(255, 153, 204));
+        jPanel1.setBackground(new java.awt.Color(255, 153, 153));
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel8.setText("Hóa đơn");
@@ -184,6 +214,11 @@ public class QuanLyHoaDonJPanel extends javax.swing.JPanel {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tblHoaDon.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblHoaDonMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(tblHoaDon);
@@ -293,7 +328,19 @@ public class QuanLyHoaDonJPanel extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) tblHoaDon.getModel();
         model.setRowCount(0); // xóa tất cả dữ liệu trong bảng
         this.fillTable();
+        this.fillTableChiTietHoaDon();
     }//GEN-LAST:event_btnCapNhatActionPerformed
+
+    private void tblHoaDonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblHoaDonMouseClicked
+        // TODO add your handling code here:
+        int selectedRow = tblHoaDon.getSelectedRow(); // lấy hàng được chọn
+        if (selectedRow >= 0) {
+            // Lấy idHoaDon từ cột 0 (cột id)
+            int idHoaDon = Integer.parseInt(tblHoaDon.getValueAt(selectedRow, 0).toString());
+            // Gọi phương thức load chi tiết hóa đơn
+            fillTableChiTietHoaDon(idHoaDon);
+        }
+    }//GEN-LAST:event_tblHoaDonMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

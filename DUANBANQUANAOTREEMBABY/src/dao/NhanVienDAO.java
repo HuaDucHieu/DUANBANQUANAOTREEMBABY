@@ -136,4 +136,27 @@ public class NhanVienDAO {
         return null;
     }
 
+    public NhanVienEntity dangNhap(String email, String matKhau) {
+        String sql = "SELECT * FROM NhanVien WHERE email = ? AND mat_khau = ?";
+        try (Connection con = ConnectDB.getConnect(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+            ps.setString(2, matKhau);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                NhanVienEntity nv = new NhanVienEntity();
+                nv.setIdNhanVien(rs.getInt("id_nhan_vien"));
+                nv.setHoTen(rs.getString("ho_ten"));
+                nv.setEmail(rs.getString("email"));
+                nv.setMatKhau(rs.getString("mat_khau"));
+                nv.setChucVu(rs.getString("chuc_vu"));
+                return nv;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
