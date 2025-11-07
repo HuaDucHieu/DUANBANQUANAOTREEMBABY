@@ -47,8 +47,8 @@ public class HomeJFrame extends javax.swing.JFrame {
 
         mainPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
@@ -62,7 +62,7 @@ public class HomeJFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        mainPanel.setBackground(new java.awt.Color(255, 153, 204));
+        mainPanel.setBackground(new java.awt.Color(255, 153, 153));
         mainPanel.setLayout(new java.awt.BorderLayout());
 
         jLabel1.setBackground(new java.awt.Color(255, 153, 153));
@@ -72,10 +72,28 @@ public class HomeJFrame extends javax.swing.JFrame {
         jLabel1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         mainPanel.add(jLabel1, java.awt.BorderLayout.PAGE_START);
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/mau-logo-shop-do-em-be.jpg"))); // NOI18N
-        jLabel2.setToolTipText("");
-        mainPanel.add(jLabel2, java.awt.BorderLayout.CENTER);
-        mainPanel.add(jLabel3, java.awt.BorderLayout.LINE_END);
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\duchi\\OneDrive\\Pictures\\Saved Pictures\\children-clothing-kids-store-baby-clothes-garment-shop-circle-emblem-logo-design-illustration-vector.jpg")); // NOI18N
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(379, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 1299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 756, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(339, Short.MAX_VALUE))
+        );
+
+        mainPanel.add(jPanel2, java.awt.BorderLayout.CENTER);
 
         jPanel1.setBackground(new java.awt.Color(0, 153, 153));
 
@@ -332,8 +350,8 @@ public class HomeJFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel mainPanel;
     // End of variables declaration//GEN-END:variables
 }
